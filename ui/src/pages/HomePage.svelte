@@ -21,7 +21,7 @@
 </script>
 
 <div class="max-w-lg mx-auto pt-6 sm:pt-16 spaced">
-  <h1 class="text-5xl sm:text-5xl font-black tracking-tight text-center leading-tight text-gray-950">{t.home.tagline}</h1>
+  <h1 class="text-5xl sm:text-5xl font-black tracking-tight text-center leading-tight pb-1 bg-linear-to-r from-primary-600 to-amber-600 dark:from-primary-500 dark:to-amber-400 bg-clip-text text-transparent">{t.home.tagline}</h1>
   <p class="text-gray-600 text-center text-lg">{t.home.description}</p>
 
   <StrumStrings/>
