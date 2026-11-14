@@ -4,7 +4,7 @@ A PWA for jamming together in sync: start a jam, let people nearby join by scann
 pick a chord progression (or a song with lyrics) and everyone sees the same chords, highlighted in time with a shared beat.
 Members can suggest the next song, progression or key and vote on suggestions.
 
-* Jams are anonymous and kept in server memory - no login needed to start or join
+* Jams are ephemeral and stored only in server memory, so they are lost when the server restarts; no login needed to start or join
 * Real-time sync via Server-Sent Events, beat is synchronized using server clock offset
 * Built-in library of common chord progressions, transposable to any key
 * Lyrics search via [LRCLIB](https://lrclib.net), ChordPro or "chords over lyrics" text can be pasted from any chord site
