@@ -13,3 +13,11 @@ it('asks to pick a song if nothing playing', () => {
   const {container} = render(NowPlaying, {jam: {...jam, song: undefined}})
   expect(container.textContent).to.contain('Pick a song')
 })
+
+it('links to YouTube search for songs with artist', () => {
+  const {container} = render(NowPlaying, {jam})
+  const link = container.querySelector('a.youtube')!
+  expect(link.getAttribute('href')).to.eq('https://www.youtube.com/results?search_query=Let%20It%20Be%20The%20Beatles')
+  expect(link.getAttribute('target')).to.eq('_blank')
+  expect(render(NowPlaying, {jam: {...jam, song: {...jam.song!, artist: undefined}}}).container.querySelector('a.youtube')).not.to.exist
+})

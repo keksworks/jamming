@@ -4,6 +4,7 @@
   import type {Jam, Song} from 'src/api/types'
   import Button from 'src/components/Button.svelte'
   import Modal from 'src/components/Modal.svelte'
+  import Icon from 'src/icons/Icon.svelte'
   import SelectField from 'src/forms/SelectField.svelte'
   import {detectKey, keyOptions, parseSheet, semitonesBetween, usesFlats} from 'src/music/chords'
   import {position} from 'src/music/playback'
@@ -51,10 +52,14 @@
       {#if key}
         <SelectField label={t.jam.key} bind:value={key} options={keyOptions(key.endsWith('m'))} onchange={() => changeKey(key)}/>
       {/if}
+      {#if jam.song.artist}
+        <a href="https://www.youtube.com/results?search_query={encodeURIComponent(jam.song.title + ' ' + jam.song.artist)}" target="_blank" rel="noopener"
+           class="youtube btn outlined gap-1"><Icon name="brand-youtube"/> {t.jam.youtube}</a>
+      {/if}
       <Button label={t.jam.changeSong} icon="music" class="outlined" onclick={() => showPicker = true}/>
     </div>
 
-    <PlaybackControls playback={jam.playback} {beat}/>
+    <PlaybackControls playback={jam.playback} {beat} total={pos?.total} chord={pos && !countIn ? sheet.chords[pos.index] : undefined}/>
 
     {#if pos}
       <div class="flex items-baseline gap-6">

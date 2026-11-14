@@ -1,16 +1,17 @@
 import type {Playback} from 'src/api/types'
+import {midiFrequency, pianoNotes} from './chords'
 import {frequencies, guitarVoicing} from './strings'
 
 export function beatMs(playback: Playback) {
   return 60000 / playback.bpm
 }
 
-/** Current chord index and beat within it; beat is negative during count-in */
+/** Current chord index, beat within it and total beats since start; beats are negative during count-in */
 export function position(playback: Playback, now: number, chordCount: number) {
   if (!playback.startedAt || !chordCount) return
   const beats = Math.floor((now - Date.parse(playback.startedAt)) / beatMs(playback))
-  if (beats < 0) return {index: 0, beat: beats}
-  return {index: Math.floor(beats / playback.beatsPerChord) % chordCount, beat: beats % playback.beatsPerChord}
+  if (beats < 0) return {index: 0, beat: beats, total: beats}
+  return {index: Math.floor(beats / playback.beatsPerChord) % chordCount, beat: beats % playback.beatsPerChord, total: beats}
 }
 
 /** Starts after one chord of count-in */
@@ -72,9 +73,12 @@ export function strum(frequencies: (number|undefined)[], delayMs = 30) {
   frequencies.filter(f => f).forEach((f, i) => setTimeout(() => pluck(f!), i * delayMs))
 }
 
-/** Strums the easiest guitar fingering of the chord */
-export async function strumChord(chord: string) {
+export type Instrument = 'guitar'|'piano'
+
+/** Guitar strums the easiest fingering, piano plays the chord notes together */
+export async function playChord(chord: string, instrument: Instrument) {
   await unlockAudio()
+  if (instrument == 'piano') return playPiano(pianoNotes(chord).map(midiFrequency))
   const frets = guitarVoicing(chord)
   if (frets) strum(frequencies(frets))
 }

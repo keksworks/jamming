@@ -3,15 +3,32 @@
   import type {Playback} from 'src/api/types'
   import Button from 'src/components/Button.svelte'
   import SelectField from 'src/forms/SelectField.svelte'
-  import {changeTempo, click, start} from 'src/music/playback'
+  import {changeTempo, click, type Instrument, playChord, start, unlockAudio} from 'src/music/playback'
   import {changePlayback, serverNow} from 'src/stores/jam'
 
   export let playback: Playback
   export let beat: number|undefined = undefined
+  /** Beats since start, changes on every beat */
+  export let total: number|undefined = undefined
+  /** Current chord, not set during count-in */
+  export let chord: string|undefined = undefined
 
+  /** Sounds are local to this device, so that not every phone in the room is playing them */
   let metronome = false
+  let chordSound: Instrument|'none' = 'none'
 
-  $: if (metronome && beat !== undefined) click(beat == 0)
+  $: onBeat(total)
+
+  function onBeat(total: number|undefined) {
+    if (total === undefined) return
+    if (metronome) click(beat == 0)
+    if (beat == 0 && chord && chordSound != 'none') playChord(chord, chordSound)
+  }
+
+  function toggleMetronome() {
+    metronome = !metronome
+    if (metronome) unlockAudio()
+  }
 
   function togglePlay() {
     changePlayback(playback.startedAt ? {...playback, startedAt: undefined} : start(playback, serverNow()))
@@ -34,7 +51,9 @@
   <SelectField value={playback.beatsPerChord} options={{2: '2', 3: '3', 4: '4', 6: '6', 8: '8'}} title={t.jam.beatsPerChord}
                onchange={(e: Event) => changePlayback({...playback, beatsPerChord: +(e.target as HTMLSelectElement).value})}/>
 
-  <Button icon={metronome ? 'volume' : 'volume-off'} class="outlined" title={t.jam.metronome} onclick={() => metronome = !metronome}/>
+  <Button icon={metronome ? 'volume' : 'volume-off'} label={t.jam.metronome} class={metronome ? 'default' : 'outlined'} aria-pressed={metronome} onclick={toggleMetronome}/>
+
+  <SelectField bind:value={chordSound} options={t.jam.chordSound.options} title={t.jam.chordSound.title} onchange={() => chordSound != 'none' && unlockAudio()}/>
 
   {#if beat !== undefined}
     <span class="flex gap-1.5">

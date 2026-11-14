@@ -34,7 +34,16 @@
     "piano": "Piano",
     "strum": "Strum",
     "playChord": "Play",
-    "noDiagram": "No diagram for this chord"
+    "noDiagram": "No diagram for this chord",
+    "chordSound": {
+      "title": "Play chords along",
+      "options": {
+        "none": "No chord sound",
+        "guitar": "Guitar chords",
+        "piano": "Piano chords"
+      }
+    },
+    "youtube": "YouTube"
   },
   "song": {
     "progressions": "Progressions",

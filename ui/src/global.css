@@ -183,7 +183,7 @@ html.loading {
   }
 
   .btn {
-    @apply inline-flex items-center justify-center min-w-28 px-4 py-2 rounded-md font-semibold text-sm cursor-pointer transition-colors
+    @apply inline-flex items-center justify-center min-w-28 min-h-[2.375rem] px-4 py-2 rounded-md font-semibold text-sm cursor-pointer transition-colors
       disabled:opacity-50 disabled:cursor-default;
   }
 
@@ -200,7 +200,7 @@ html.loading {
   }
 
   .btn.icon-only {
-    @apply min-w-0 px-2;
+    @apply min-w-[2.375rem] px-2;
   }
 
   .btn.secondary {

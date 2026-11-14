@@ -6,10 +6,10 @@ const playback = {bpm: 120, beatsPerChord: 4, startedAt: new Date(now).toISOStri
 
 it('position', () => {
   expect(position({...playback, startedAt: undefined}, now, 4)).to.be.undefined
-  expect(position(playback, now - 1000, 4)).to.deep.eq({index: 0, beat: -2})
-  expect(position(playback, now, 4)).to.deep.eq({index: 0, beat: 0})
-  expect(position(playback, now + 2500, 4)).to.deep.eq({index: 1, beat: 1})
-  expect(position(playback, now + 8000, 4)).to.deep.eq({index: 0, beat: 0})
+  expect(position(playback, now - 1000, 4)).to.deep.eq({index: 0, beat: -2, total: -2})
+  expect(position(playback, now, 4)).to.deep.eq({index: 0, beat: 0, total: 0})
+  expect(position(playback, now + 2500, 4)).to.deep.eq({index: 1, beat: 1, total: 5})
+  expect(position(playback, now + 8000, 4)).to.deep.eq({index: 0, beat: 0, total: 16})
 })
 
 it('start with count-in of one chord', () => {

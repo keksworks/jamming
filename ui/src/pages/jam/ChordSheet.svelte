@@ -2,7 +2,7 @@
   import {t} from 'i18n'
   import {tick} from 'svelte'
   import type {SheetPart} from 'src/music/chords'
-  import {strumChord} from 'src/music/playback'
+  import {playChord} from 'src/music/playback'
   import Icon from 'src/icons/Icon.svelte'
   import ChordPopover from './ChordPopover.svelte'
 
@@ -41,7 +41,7 @@
             <span class="group relative self-start">
               <button type="button" class="chord font-bold text-left pr-2 rounded-sm cursor-pointer {part.index == current ? 'current bg-primary-600 text-white px-1' : 'text-primary-700 dark:text-primary-300'}"
                       onclick={(e: MouseEvent) => toggle(e, part.chord!)}>{part.chord}</button>
-              <button type="button" title={t.jam.playChord} onclick={() => strumChord(part.chord!)}
+              <button type="button" title={t.jam.playChord} onclick={() => playChord(part.chord!, 'guitar')}
                       class="chord-play absolute z-10 top-1/2 -translate-y-1/2 -right-2 flex p-0.5 rounded-sm text-xs bg-surface text-primary-600 border border-gray-200 cursor-pointer
                              opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto">
                 <Icon name="player-play"/>
