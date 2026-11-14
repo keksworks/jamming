@@ -71,19 +71,72 @@ export function strum(frequencies: (number|undefined)[], delayMs = 30) {
   frequencies.filter(f => f).forEach((f, i) => setTimeout(() => pluck(f!), i * delayMs))
 }
 
-/** Simple piano-like tone: soft triangle wave with quick attack and long decay */
+let pianoOutput: AudioNode|undefined
+
+/** Compressor lets chords be loud without clipping */
+function pianoBus() {
+  const audio = audioContext()
+  if (!pianoOutput) {
+    const compressor = audio.createDynamicsCompressor()
+    compressor.threshold.value = -20
+    compressor.ratio.value = 4
+    const makeup = audio.createGain()
+    makeup.gain.value = 2
+    compressor.connect(makeup).connect(audio.destination)
+    pianoOutput = compressor
+  }
+  return pianoOutput
+}
+
+/**
+ * Piano-like tone, synthesized from what makes piano sound like a piano:
+ * slightly sharp (inharmonic) overtones of stiff strings, quick drop after the hammer strike followed by a long tail,
+ * higher overtones fading faster, two slightly detuned strings per note and a soft hammer thump.
+ */
 export function playPiano(frequencies: number[]) {
   const audio = audioContext()
-  for (const frequency of frequencies) {
+  const now = audio.currentTime
+  const output = pianoBus()
+  const volume = 0.5 / Math.sqrt(frequencies.length)
+
+  function partial(frequency: number, amplitude: number, sustain: number, detune = 0) {
     const osc = audio.createOscillator()
     const gain = audio.createGain()
-    osc.type = 'triangle'
     osc.frequency.value = frequency
-    gain.gain.setValueAtTime(0, audio.currentTime)
-    gain.gain.linearRampToValueAtTime(0.2, audio.currentTime + 0.01)
-    gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 1.5)
-    osc.connect(gain).connect(audio.destination)
-    osc.start()
-    osc.stop(audio.currentTime + 1.5)
+    osc.detune.value = detune
+    gain.gain.setValueAtTime(0, now)
+    gain.gain.linearRampToValueAtTime(amplitude, now + 0.003)
+    gain.gain.setTargetAtTime(amplitude * 0.35, now + 0.003, 0.08)
+    gain.gain.setTargetAtTime(0, now + 0.2, sustain / 4)
+    osc.connect(gain).connect(output)
+    osc.start(now)
+    osc.stop(now + sustain)
   }
+
+  for (const frequency of frequencies) {
+    const sustain = 3 * Math.min(1.5, Math.sqrt(220 / frequency))
+    for (let n = 1; n <= 8 && n * frequency < 10000; n++) {
+      const overtone = n * frequency * Math.sqrt(1 + 0.0004 * n * n)
+      const amplitude = volume / n ** 1.3
+      if (n == 1) [-1, 1].forEach(detune => partial(overtone, amplitude / 2, sustain, detune))
+      else partial(overtone, amplitude, sustain / n ** 0.6)
+    }
+    hammer(frequency, volume * 0.3, output)
+  }
+}
+
+function hammer(frequency: number, volume: number, output: AudioNode) {
+  const audio = audioContext()
+  const noise = audio.createBuffer(1, audio.sampleRate * 0.03, audio.sampleRate)
+  noise.getChannelData(0).forEach((_, i, data) => data[i] = Math.random() * 2 - 1)
+  const source = audio.createBufferSource()
+  const filter = audio.createBiquadFilter()
+  const gain = audio.createGain()
+  source.buffer = noise
+  filter.type = 'lowpass'
+  filter.frequency.value = Math.min(4000, frequency * 6)
+  gain.gain.setValueAtTime(volume, audio.currentTime)
+  gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.03)
+  source.connect(filter).connect(gain).connect(output)
+  source.start()
 }
