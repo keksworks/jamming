@@ -20,6 +20,37 @@ function noteIndex(note: string) {
   return i >= 0 ? i : flats.indexOf(note)
 }
 
+/** Intervals in semitones from root, by chord suffix */
+const qualities: Record<string, number[]> = {
+  '': [0, 4, 7], m: [0, 3, 7], min: [0, 3, 7], 5: [0, 7],
+  7: [0, 4, 7, 10], maj7: [0, 4, 7, 11], M7: [0, 4, 7, 11], m7: [0, 3, 7, 10], mM7: [0, 3, 7, 11], mmaj7: [0, 3, 7, 11],
+  6: [0, 4, 7, 9], m6: [0, 3, 7, 9], 9: [0, 4, 7, 10, 14], maj9: [0, 4, 7, 11, 14], m9: [0, 3, 7, 10, 14],
+  add9: [0, 4, 7, 14], madd9: [0, 3, 7, 14], sus2: [0, 2, 7], sus4: [0, 5, 7], sus: [0, 5, 7], '7sus4': [0, 5, 7, 10],
+  dim: [0, 3, 6], '°': [0, 3, 6], dim7: [0, 3, 6, 9], '°7': [0, 3, 6, 9], m7b5: [0, 3, 6, 10], 'ø': [0, 3, 6, 10], 'ø7': [0, 3, 6, 10],
+  aug: [0, 4, 8], '+': [0, 4, 8], '7#9': [0, 4, 7, 10, 15], '7b9': [0, 4, 7, 10, 13], 11: [0, 4, 7, 10, 14, 17], 13: [0, 4, 7, 10, 14, 21]
+}
+
+/** Pitch classes of root and bass (0 = C) and intervals from root; unknown suffixes fall back to major or minor triad */
+export function parseChord(chord: string) {
+  const m = chord.match(chordRegex)
+  if (!m) return
+  const [, root, suffix, bass] = m
+  const intervals = qualities[suffix.replace(/[()]/g, '')] ?? (/^m(?!aj)/.test(suffix) ? qualities.m : qualities[''])
+  return {root: noteIndex(root), bass: noteIndex(bass ?? root), intervals}
+}
+
+export function midiFrequency(midi: number) {
+  return 440 * 2 ** ((midi - 69) / 12)
+}
+
+/** MIDI notes for piano: chord stacked from root in the octave of C3, bass of slash chords an octave lower */
+export function pianoNotes(chord: string) {
+  const parsed = parseChord(chord)
+  if (!parsed) return []
+  const notes = parsed.intervals.map(i => 48 + parsed.root + i)
+  return parsed.bass != parsed.root ? [36 + parsed.bass, ...notes] : notes
+}
+
 function keyRoot(key: string) {
   return key.match(/^[A-G][#b]?/)?.[0] ?? key
 }

@@ -33,7 +33,7 @@ function audioContext() {
 
 /** Browsers allow sound only after user interaction, e.g. click or tap */
 export function unlockAudio() {
-  audioContext().resume()
+  return audioContext().resume()
 }
 
 export function click(accent: boolean) {
@@ -64,4 +64,26 @@ export function pluck(frequency: number, volume = 0.3) {
   gain.gain.value = volume
   source.connect(gain).connect(audio.destination)
   source.start()
+}
+
+/** Guitar strum: plucks strings one after another, from low to high */
+export function strum(frequencies: (number|undefined)[], delayMs = 30) {
+  frequencies.filter(f => f).forEach((f, i) => setTimeout(() => pluck(f!), i * delayMs))
+}
+
+/** Simple piano-like tone: soft triangle wave with quick attack and long decay */
+export function playPiano(frequencies: number[]) {
+  const audio = audioContext()
+  for (const frequency of frequencies) {
+    const osc = audio.createOscillator()
+    const gain = audio.createGain()
+    osc.type = 'triangle'
+    osc.frequency.value = frequency
+    gain.gain.setValueAtTime(0, audio.currentTime)
+    gain.gain.linearRampToValueAtTime(0.2, audio.currentTime + 0.01)
+    gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 1.5)
+    osc.connect(gain).connect(audio.destination)
+    osc.start()
+    osc.stop(audio.currentTime + 1.5)
+  }
 }

@@ -1,12 +1,12 @@
 <script lang="ts">
   import {t} from 'i18n'
   import {onDestroy, onMount} from 'svelte'
-  import {crossedStrings, frequencies, guitarChords} from 'src/music/strings'
+  import {crossedStrings, frequencies, guitarVoicing} from 'src/music/strings'
   import {pluck, unlockAudio} from 'src/music/playback'
 
   export let height = 180
 
-  const chordNames = Object.keys(guitarChords)
+  const chordNames = ['C', 'G', 'Am', 'F']
   const glyphs = ['♪', '♫', '♩', '♬']
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
   const strings = Array.from({length: 6}, () => ({amplitude: 0, phase: 0}))
@@ -30,7 +30,7 @@
   }
 
   function strum(i: number, y: number, speed: number) {
-    const frequency = frequencies(guitarChords[chordNames[chord]])[i]
+    const frequency = frequencies(guitarVoicing(chordNames[chord])!)[i]
     if (frequency) pluck(frequency, Math.min(0.4, 0.1 + speed / 150))
     strings[i].amplitude = Math.min(14, (frequency ? 4 : 1) + speed / 4)
     if (frequency && !reducedMotion) notes.push({x: positions[i], y, age: 0, glyph: glyphs[i % glyphs.length]})

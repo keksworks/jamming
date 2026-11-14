@@ -4,7 +4,9 @@ import {
   isMinorProgression,
   isValidProgression,
   numeralToChord,
+  parseChord,
   parseSheet,
+  pianoNotes,
   progressions,
   progressionSheet,
   progressionSong,
@@ -84,4 +86,19 @@ it('isMinorProgression', () => {
   expect(isMinorProgression(progressions.andalusian)).to.be.true
   expect(isMinorProgression(progressions.jazz)).to.be.false
   expect(isMinorProgression('iv I')).to.be.false
+})
+
+it('parseChord', () => {
+  expect(parseChord('C')).to.deep.eq({root: 0, bass: 0, intervals: [0, 4, 7]})
+  expect(parseChord('F#m7')).to.deep.eq({root: 6, bass: 6, intervals: [0, 3, 7, 10]})
+  expect(parseChord('D/F#')).to.deep.eq({root: 2, bass: 6, intervals: [0, 4, 7]})
+  expect(parseChord('E7(#9)')!.intervals).to.deep.eq([0, 4, 7, 10, 15])
+  expect(parseChord('Am7add11')!.intervals).to.deep.eq([0, 3, 7])
+  expect(parseChord('Verse')).to.be.undefined
+})
+
+it('pianoNotes', () => {
+  expect(pianoNotes('C')).to.deep.eq([48, 52, 55])
+  expect(pianoNotes('Am7')).to.deep.eq([57, 60, 64, 67])
+  expect(pianoNotes('D/F#')).to.deep.eq([42, 50, 54, 57])
 })

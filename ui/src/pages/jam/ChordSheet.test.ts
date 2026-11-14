@@ -1,4 +1,4 @@
-import {render} from '@testing-library/svelte'
+import {fireEvent, render} from '@testing-library/svelte'
 import ChordSheet from './ChordSheet.svelte'
 import {parseSheet} from 'src/music/chords'
 
@@ -11,6 +11,14 @@ it('renders chords above lyrics and highlights current', () => {
 
 it('keeps text row for chords without text, so that all chords are aligned', () => {
   const {container} = render(ChordSheet, {lines: parseSheet('[C] [F]').lines})
-  const texts = [...container.querySelectorAll('b + span')].map(s => s.textContent)
+  const texts = [...container.querySelectorAll('.chord + span')].map(s => s.textContent)
   expect(texts).to.deep.eq([' ', ' '])
+})
+
+it('shows chord diagrams on click, closes on Escape', async () => {
+  const {container, getByText} = render(ChordSheet, {lines: parseSheet('[Am]Hello').lines})
+  await fireEvent.click(getByText('Am'))
+  expect(container.querySelector('.chord-popover h4')!.textContent).to.eq('Am')
+  await fireEvent.keyUp(window, {key: 'Escape'})
+  expect(container.querySelector('.chord-popover')).not.to.exist
 })

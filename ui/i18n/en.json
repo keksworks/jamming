@@ -29,7 +29,12 @@
     "beatsPerChord": "Beats per chord",
     "metronome": "Metronome",
     "next": "Next",
-    "getReady": "Get ready"
+    "getReady": "Get ready",
+    "guitar": "Guitar",
+    "piano": "Piano",
+    "strum": "Strum",
+    "playChord": "Play",
+    "noDiagram": "No diagram for this chord"
   },
   "song": {
     "progressions": "Progressions",
