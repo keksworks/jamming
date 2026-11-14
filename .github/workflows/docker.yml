@@ -93,7 +93,7 @@ jobs:
           echo "$DEPLOY_SSH_KEY" > /tmp/deploy_key && chmod 600 /tmp/deploy_key
           OPTS="-i /tmp/deploy_key -o StrictHostKeyChecking=no"
           scp $OPTS deploy.sh compose*.yml .env "$DEPLOY_SSH_HOST":jamming
-          ssh $OPTS "$DEPLOY_SSH_HOST" "cd jamming && ./deploy.sh"
+          ssh $OPTS "$DEPLOY_SSH_HOST" "cd jamming && REGISTRY=$REGISTRY IMAGE_NAME=$IMAGE_NAME ./deploy.sh"
         env:
           DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
