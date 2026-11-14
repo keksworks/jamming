@@ -4,11 +4,17 @@
     "title": "Home",
     "tagline": "Jam together, in sync",
     "description": "Start a jam, invite people nearby, and everyone sees the same chords in time with the beat. Suggest the next song or key and vote together.",
-    "strum": "Swipe across the strings to strum along",
     "yourName": "Your name",
     "start": "Start a jam",
     "code": "Jam code",
-    "join": "Join"
+    "join": "Join",
+    "install": {
+      "title": "Get the app",
+      "description": "Add Jamming.me to your home screen to start or join a jam with one tap, in full screen.",
+      "button": "Add to home screen",
+      "ios": "Tap {share} Share in Safari, then “Add to Home Screen”.",
+      "android": "Open the browser menu ⋮ and choose “Add to Home screen” or “Install app”."
+    }
   },
   "jam": {
     "notFound": "Jam not found, it may have ended",

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import {t} from 'i18n'
   import {onDestroy, onMount} from 'svelte'
   import {crossedStrings, frequencies, guitarVoicing} from 'src/music/strings'
   import {pluck, unlockAudio} from 'src/music/playback'
@@ -109,5 +108,4 @@
   <canvas bind:this={canvas} aria-hidden="true" class="block w-full cursor-crosshair touch-pan-y" style="height: {height}px"
           onpointerdown={(e: PointerEvent) => { unlockAudio(); lastX = undefined; move(e) }}
           onpointermove={move} onpointerleave={() => lastX = undefined}></canvas>
-  <p class="text-center text-sm text-gray-500">{t.home.strum}</p>
 </div>

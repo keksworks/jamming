@@ -6,6 +6,7 @@
   import Button from 'src/components/Button.svelte'
   import {createJam, me, setMyName} from 'src/stores/jam'
   import StrumStrings from './StrumStrings.svelte'
+  import InstallApp from './InstallApp.svelte'
 
   let name = me.name
   let code = ''
@@ -35,4 +36,6 @@
     <FormField label={t.home.code} bind:value={code} minlength={4} maxlength={4} autocapitalize="characters" class="lg flex-1 [&_input]:uppercase [&_input]:font-mono [&_input]:tracking-widest"/>
     <Button type="submit" label={t.home.join} size="lg" class="outlined"/>
   </Form>
+
+  <InstallApp/>
 </div>

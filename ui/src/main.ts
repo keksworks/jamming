@@ -5,9 +5,11 @@ import api from 'src/api/api'
 import App from './App.svelte'
 import {initErrorHandlers} from 'src/api/errorHandlers'
 import {initSession} from 'src/stores/auth'
+import {listenForInstallPrompt} from 'src/stores/install'
 import type {User} from 'src/api/types'
 
 initErrorHandlers()
+listenForInstallPrompt()
 
 const [auth] = await Promise.all([api.get<User>('user').catch(() => null)])
 if (auth) initSession(auth)
