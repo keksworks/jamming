@@ -23,15 +23,30 @@
       ({note: octave + +pitch, x: (o * 7 + w + 1) * whiteWidth - blackWidth / 2, width: blackWidth, height: blackHeight, black: true})))
   ]
 
-  function keyClass(key: {note: number, black: boolean}) {
+  /** Notes currently sounding, highlighted for a moment after being played */
+  let sounding = new Set<number>()
+  const fadeTimers: Record<number, ReturnType<typeof setTimeout>> = {}
+
+  function keyClass(key: {note: number, black: boolean}, notes: number[], sounding: Set<number>) {
     const inChord = notes.includes(key.note)
+    if (sounding.has(key.note)) return 'sounding ' + (key.black ? 'fill-amber-500' : 'stroke-gray-400 fill-amber-300')
     return key.black ? (inChord ? 'pressed fill-primary-700' : 'fill-gray-950 dark:fill-black') :
       'stroke-gray-400 ' + (inChord ? 'pressed fill-primary-500' : 'fill-white')
   }
 
-  async function play(notes: number[]) {
+  function light(note: number) {
+    clearTimeout(fadeTimers[note])
+    sounding = new Set(sounding).add(note)
+    fadeTimers[note] = setTimeout(() => {
+      sounding.delete(note)
+      sounding = sounding
+    }, 500)
+  }
+
+  async function play(played: number[]) {
+    played.forEach(light)
     await unlockAudio()
-    playPiano(notes.map(midiFrequency))
+    playPiano(played.map(midiFrequency))
   }
 </script>
 
@@ -40,7 +55,7 @@
   <svg viewBox="0 0 {octaves * 7 * whiteWidth} {whiteHeight}" class="w-full max-w-72 mx-auto select-none" role="group" aria-label={chord}>
     {#each keys as key (key.note)}
       <rect x={key.x} y="0" width={key.width} height={key.height} rx="1.5" role="button" tabindex="0"
-            class="key cursor-pointer outline-none active:opacity-60 focus-visible:opacity-75 {keyClass(key)}"
+            class="key cursor-pointer outline-none transition-colors duration-200 focus-visible:opacity-75 {keyClass(key, notes, sounding)}"
             onclick={() => play([key.note])} onkeydown={(e: KeyboardEvent) => (e.key == 'Enter' || e.key == ' ') && play([key.note])}/>
     {/each}
   </svg>
