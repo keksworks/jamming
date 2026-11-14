@@ -5,6 +5,7 @@
   import FormField from 'src/forms/FormField.svelte'
   import Button from 'src/components/Button.svelte'
   import {createJam, me, setMyName} from 'src/stores/jam'
+  import StrumStrings from './StrumStrings.svelte'
 
   let name = me.name
   let code = ''
@@ -23,7 +24,9 @@
   <h1 class="text-5xl sm:text-5xl font-black tracking-tight text-center leading-tight text-gray-950">{t.home.tagline}</h1>
   <p class="text-gray-600 text-center text-lg">{t.home.description}</p>
 
-  <Form submit={start} class="card spaced p-6 mt-8">
+  <StrumStrings/>
+
+  <Form submit={start} class="card spaced p-6">
     <FormField label={t.home.yourName} bind:value={name} maxlength={30} autocomplete="nickname" class="lg"/>
     <Button type="submit" label={t.home.start} icon="music" size="lg" class="default w-full"/>
   </Form>

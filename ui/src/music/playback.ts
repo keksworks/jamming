@@ -27,8 +27,17 @@ export function changeTempo(playback: Playback, bpm: number, now: number): Playb
 
 let audio: AudioContext|undefined
 
+function audioContext() {
+  return audio ??= new AudioContext()
+}
+
+/** Browsers allow sound only after user interaction, e.g. click or tap */
+export function unlockAudio() {
+  audioContext().resume()
+}
+
 export function click(accent: boolean) {
-  audio ??= new AudioContext()
+  const audio = audioContext()
   const osc = audio.createOscillator()
   const gain = audio.createGain()
   osc.frequency.value = accent ? 1500 : 1000
@@ -37,4 +46,22 @@ export function click(accent: boolean) {
   osc.connect(gain).connect(audio.destination)
   osc.start()
   osc.stop(audio.currentTime + 0.05)
+}
+
+/** Plucked string sound using Karplus-Strong synthesis: noise burst fed through a decaying delay line */
+export function pluck(frequency: number, volume = 0.3) {
+  const audio = audioContext()
+  if (audio.state != 'running') return
+  const data = new Float32Array(Math.floor(audio.sampleRate * 1.5))
+  const period = Math.round(audio.sampleRate / frequency)
+  for (let i = 0; i < data.length; i++)
+    data[i] = i < period ? Math.random() * 2 - 1 : (data[i - period] + data[i - period + 1]) / 2 * 0.996
+  const buffer = audio.createBuffer(1, data.length, audio.sampleRate)
+  buffer.copyToChannel(data, 0)
+  const source = audio.createBufferSource()
+  const gain = audio.createGain()
+  source.buffer = buffer
+  gain.gain.value = volume
+  source.connect(gain).connect(audio.destination)
+  source.start()
 }
