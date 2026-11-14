@@ -10,6 +10,8 @@ import klite.HttpExchange
 import klite.StatusCode.Companion.Found
 import klite.StatusCodeException
 import klite.email.EmailSender
+import lyrics.LrcLibClient
+import songs.SongRepository
 import users.UserRepository
 import java.net.URI
 
@@ -20,6 +22,8 @@ abstract class BaseMocks {
 
     val userRepository = mock<UserRepository>()
     val emailSender = mock<EmailSender>(relaxed = true)
+    val songRepository = mock<SongRepository>()
+    val lrcLibClient = mock<LrcLibClient>()
 
     inline fun <reified T: Any> create() = registry.create(T::class)
 
@@ -40,5 +44,6 @@ abstract class BaseMocks {
       every { get(user.id) } returns user
       every { save(any()) } returns 1
     }
+    every { songRepository.save(any()) } returns 1
   }
 }

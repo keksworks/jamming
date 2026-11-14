@@ -70,6 +70,10 @@ export function parseSheet(sheet: string, semitones = 0, flat = false) {
   return {lines, chords}
 }
 
+export function hasChords(sheet: string) {
+  return parseSheet(sheet).chords.length > 0
+}
+
 function isChordLine(line: string) {
   const tokens = line.trim().split(/\s+/).filter(t => t != '|')
   return tokens[0] && tokens.every(isChord)

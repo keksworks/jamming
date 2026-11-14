@@ -11,14 +11,12 @@ export interface EmailRequest {email: Email}
 export interface Member {id: string; name: string}
 // class jams.Playback
 export interface Playback {beatsPerChord: number; bpm: number; startedAt?: Instant}
-// class jams.Song
-export interface Song {artist?: string; key?: string; sheet: string; title: string}
+// class songs.Song
+export interface Song {artist?: string; id: Id<Song>; key?: string; sheet: string; title: string; createdAt: Instant}
 // class jams.Suggestion
 export interface Suggestion {by: string; id: Id<Suggestion>; key?: string; song?: Song; votes: Array<string>}
 // class jams.Jam
 export interface Jam {code: string; key?: string; members: Array<Member>; playback: Playback; song?: Song; suggestions: Array<Suggestion>; updatedAt: Instant}
-// class lyrics.Lyrics
-export interface Lyrics {artistName: string; id: number; plainLyrics?: string; trackName: string}
 
 // klite.Id
 export type Id<T> = string & {_of?: T}

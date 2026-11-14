@@ -8,6 +8,7 @@ import klite.jdbc.NoTransaction
 import klite.sse.Event
 import klite.sse.send
 import klite.sse.startEventStream
+import songs.Song
 import java.io.IOException
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit.SECONDS

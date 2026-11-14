@@ -1,16 +1,9 @@
 package jams
 
 import db.Id
+import songs.Song
 import java.time.Instant
 import java.time.Instant.now
-
-data class Song(
-  val title: String,
-  /** ChordPro-style text: chords in square brackets inline with lyrics, e.g. `[Am]Hello [F]world` */
-  val sheet: String,
-  val artist: String? = null,
-  val key: String? = null
-)
 
 data class Member(val id: String, val name: String)
 

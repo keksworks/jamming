@@ -1,13 +1,13 @@
 <script lang="ts">
   import {t} from 'i18n'
   import api from 'src/api/api'
-  import type {Lyrics, Song} from 'src/api/types'
+  import type {Song} from 'src/api/types'
   import Button from 'src/components/Button.svelte'
   import Form from 'src/forms/Form.svelte'
   import FormField from 'src/forms/FormField.svelte'
   import SelectField from 'src/forms/SelectField.svelte'
   import TextAreaField from 'src/forms/TextAreaField.svelte'
-  import {isValidProgression, keyOptions, progressions, progressionSong, toChordPro} from 'src/music/chords'
+  import {hasChords, isValidProgression, keyOptions, progressions, progressionSong, toChordPro} from 'src/music/chords'
 
   export let actionLabel: string
   export let onpick: (song: Song) => void
@@ -17,7 +17,7 @@
   let root = 'C'
   export let song = {} as Song
   let query = ''
-  let results: Lyrics[]|undefined
+  let results: Song[]|undefined
   let custom = ''
 
   const chordSites = {
@@ -35,12 +35,18 @@
   }
 
   async function search() {
-    results = await api.get<Lyrics[]>('lyrics?q=' + encodeURIComponent(query))
+    results = await api.get<Song[]>('songs?q=' + encodeURIComponent(query))
   }
 
-  function useLyrics(lyrics: Lyrics) {
-    song = {title: lyrics.trackName, artist: lyrics.artistName, sheet: lyrics.plainLyrics!}
+  function use(found: Song) {
+    song = found
     results = undefined
+  }
+
+  /** Songs with chords are saved to our own DB for others to find */
+  async function confirm() {
+    const confirmed = {...song, sheet: toChordPro(song.sheet)}
+    onpick(hasChords(confirmed.sheet) ? await api.post<Song>('songs', confirmed) : confirmed)
   }
 </script>
 
@@ -75,14 +81,15 @@
 {:else}
   <div class="spaced">
     <Form submit={search} class="flex gap-2 items-end">
-      <FormField label={t.song.searchLyrics} bind:value={query} type="search" class="flex-1"/>
+      <FormField label={t.song.searchSongs} bind:value={query} type="search" class="flex-1"/>
       <Button type="submit" icon="search" class="outlined"/>
     </Form>
     {#if results}
       <ul class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
-        {#each results as lyrics (lyrics.id)}
-          <li><button type="button" class="w-full py-2 hover:bg-gray-50" onclick={() => useLyrics(lyrics)}>
-            <b>{lyrics.trackName}</b> <span class="text-gray-500">{lyrics.artistName}</span>
+        {#each results as found (found.id)}
+          <li><button type="button" class="w-full flex items-center gap-2 py-2 hover:bg-gray-50" onclick={() => use(found)}>
+            <b>{found.title}</b> <span class="text-gray-500 flex-1">{found.artist ?? ''}</span>
+            {#if hasChords(found.sheet)}<span class="badge">{t.song.withChords}</span>{:else}<span class="text-sm text-muted">{t.song.lyricsOnly}</span>{/if}
           </button></li>
         {:else}
           <li class="py-2 text-muted">{t.song.noResults}</li>
@@ -90,7 +97,7 @@
       </ul>
     {/if}
 
-    <Form submit={() => onpick({...song, sheet: toChordPro(song.sheet)})}>
+    <Form submit={confirm}>
       <div class="flex flex-wrap gap-3">
         <FormField label={t.song.title} bind:value={song.title} class="flex-1 min-w-40"/>
         <FormField label={t.song.artist} bind:value={song.artist} required={false} class="flex-1 min-w-40"/>

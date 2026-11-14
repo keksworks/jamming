@@ -14,7 +14,7 @@ import klite.oauth.AuthRoutes
 import klite.oauth.GoogleOAuthClient
 import klite.oauth.OAuthRoutes
 import klite.oauth.OAuthUserProvider
-import lyrics.LyricsRoutes
+import songs.SongRoutes
 import java.lang.management.ManagementFactory.getRuntimeMXBean
 import java.nio.file.Path
 import kotlin.system.exitProcess
@@ -61,7 +61,7 @@ fun main() {
       annotated<JamRoutes>("/jams")
 
       rateLimit(10, 1.minutes)
-      annotated<LyricsRoutes>("/lyrics")
+      annotated<SongRoutes>("/songs")
       annotated<AuthRoutes>(annotations = listOf(Public()))
       annotated<EmailAuthRoutes>("/auth", listOf(Public()))
     }
