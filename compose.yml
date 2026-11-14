@@ -4,6 +4,7 @@ services:
       context: .
       extra_hosts:
         - "host.docker.internal:host-gateway"
+    image: ghcr.io/angryziber/jamming
     restart: unless-stopped
     depends_on:
       - db
