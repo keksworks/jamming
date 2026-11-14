@@ -39,7 +39,8 @@
   }
 </script>
 
-<div class="flex flex-wrap items-center gap-3">
+<div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+  <div class="flex flex-wrap items-center gap-3">
   <Button icon={playback.startedAt ? 'player-stop' : 'player-play'} label={playback.startedAt ? t.jam.stop : t.jam.play} size="lg" onclick={togglePlay}/>
 
   <span class="flex items-center gap-1">
@@ -51,15 +52,10 @@
   <SelectField value={playback.beatsPerChord} options={{2: '2', 3: '3', 4: '4', 6: '6', 8: '8'}} title={t.jam.beatsPerChord}
                onchange={(e: Event) => changePlayback({...playback, beatsPerChord: +(e.target as HTMLSelectElement).value})}/>
 
-  <Button icon={metronome ? 'volume' : 'volume-off'} label={t.jam.metronome} class={metronome ? 'default' : 'outlined'} aria-pressed={metronome} onclick={toggleMetronome}/>
+  </div>
 
-  <SelectField bind:value={chordSound} options={t.jam.chordSound.options} title={t.jam.chordSound.title} onchange={() => chordSound != 'none' && unlockAudio()}/>
-
-  {#if beat !== undefined}
-    <span class="flex gap-1.5">
-      {#each Array(playback.beatsPerChord) as _, i}
-        <span class="w-3 h-5 rounded-sm {beat < 0 ? 'bg-warning-400' : i == beat ? 'bg-primary-600' : 'bg-gray-200'}"></span>
-      {/each}
-    </span>
-  {/if}
+  <div class="flex items-center gap-2 sm:ml-auto">
+    <Button icon="metronome" title={t.jam.metronome} class="{metronome ? 'default' : 'outlined'} text-lg" aria-pressed={metronome} onclick={toggleMetronome}/>
+    <SelectField bind:value={chordSound} options={t.jam.chordSound.options} title={t.jam.chordSound.title} onchange={() => chordSound != 'none' && unlockAudio()}/>
+  </div>
 </div>

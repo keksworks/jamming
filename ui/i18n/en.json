@@ -38,9 +38,9 @@
     "chordSound": {
       "title": "Play chords along",
       "options": {
-        "none": "No chord sound",
-        "guitar": "Guitar chords",
-        "piano": "Piano chords"
+        "none": "None",
+        "guitar": "Guitar",
+        "piano": "Piano"
       }
     },
     "youtube": "YouTube"

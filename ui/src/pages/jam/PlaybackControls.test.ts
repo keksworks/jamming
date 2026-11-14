@@ -5,16 +5,15 @@ import {jam} from 'src/api/testData'
 
 vi.mock('src/music/playback', async original => ({...await original(), unlockAudio: vi.fn(), click: vi.fn(), playChord: vi.fn()}))
 
-it('shows tempo and beat', () => {
-  const {container} = render(PlaybackControls, {playback: jam.playback, beat: 1})
+it('shows tempo', () => {
+  const {container} = render(PlaybackControls, {playback: jam.playback})
   expect(container.textContent).to.contain('90 BPM')
   expect(container.textContent).to.contain('Play')
-  expect(container.querySelectorAll('.bg-primary-600.rounded-sm').length).to.eq(1)
 })
 
 it('turning metronome on unlocks audio', async () => {
-  const {getByText} = render(PlaybackControls, {playback: jam.playback})
-  const button = getByText('Metronome').closest('button')!
+  const {getByTitle} = render(PlaybackControls, {playback: jam.playback})
+  const button = getByTitle('Metronome')
   expect(button.getAttribute('aria-pressed')).to.eq('false')
   await fireEvent.click(button)
   expect(unlockAudio).toHaveBeenCalled()
