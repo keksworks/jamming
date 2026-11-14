@@ -6,7 +6,7 @@
 
   export let chord: string
 
-  const whiteWidth = 14, blackWidth = 9
+  const whiteWidth = 14, whiteHeight = 70, blackWidth = 9, blackHeight = 42
   const whitePitches = [0, 2, 4, 5, 7, 9, 11]
   /** Black keys with index of the white key on their left */
   const blackPitches = {1: 0, 3: 1, 6: 3, 8: 4, 10: 5}
@@ -18,9 +18,9 @@
   /** White keys first, so that black keys are drawn on top of them */
   $: keys = [
     ...octaveStarts.flatMap((octave, o) => whitePitches.map((pitch, w) =>
-      ({note: octave + pitch, x: (o * 7 + w) * whiteWidth, width: whiteWidth, height: 60, black: false}))),
+      ({note: octave + pitch, x: (o * 7 + w) * whiteWidth, width: whiteWidth, height: whiteHeight, black: false}))),
     ...octaveStarts.flatMap((octave, o) => Object.entries(blackPitches).map(([pitch, w]) =>
-      ({note: octave + +pitch, x: (o * 7 + w + 1) * whiteWidth - blackWidth / 2, width: blackWidth, height: 36, black: true})))
+      ({note: octave + +pitch, x: (o * 7 + w + 1) * whiteWidth - blackWidth / 2, width: blackWidth, height: blackHeight, black: true})))
   ]
 
   function keyClass(key: {note: number, black: boolean}) {
@@ -36,12 +36,14 @@
 </script>
 
 {#if notes.length}
-  <svg viewBox="0 0 {octaves * 7 * whiteWidth} 60" class="w-56 max-w-full select-none" role="group" aria-label={chord}>
+  <div class="flex-1 flex items-end w-full">
+  <svg viewBox="0 0 {octaves * 7 * whiteWidth} {whiteHeight}" class="w-full max-w-72 mx-auto select-none" role="group" aria-label={chord}>
     {#each keys as key (key.note)}
       <rect x={key.x} y="0" width={key.width} height={key.height} rx="1.5" role="button" tabindex="0"
             class="key cursor-pointer outline-none active:opacity-60 focus-visible:opacity-75 {keyClass(key)}"
             onclick={() => play([key.note])} onkeydown={(e: KeyboardEvent) => (e.key == 'Enter' || e.key == ' ') && play([key.note])}/>
     {/each}
   </svg>
+  </div>
   <Button icon="player-play" label={t.jam.playChord} size="sm" class="outlined" onclick={() => play(notes)}/>
 {/if}

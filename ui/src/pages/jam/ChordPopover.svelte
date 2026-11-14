@@ -12,7 +12,7 @@
   <h4 class="flex-1">{chord}</h4>
   <button type="button" title={t.general.close} class="text-gray-400 hover:text-gray-600 p-1" onclick={onclose}><Icon name="x"/></button>
 </div>
-<div class="flex flex-wrap justify-center gap-6">
+<div class="grid grid-cols-[auto_1fr] gap-6">
   <div class="flex flex-col items-center gap-2">
     <span class="text-sm text-gray-500">{t.jam.guitar}</span>
     <GuitarDiagram {chord}/>

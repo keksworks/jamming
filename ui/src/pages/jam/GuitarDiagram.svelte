@@ -41,9 +41,10 @@
 </script>
 
 {#if frets}
+  <div class="flex-1 flex items-end">
   <button type="button" title={t.jam.strum} class="cursor-pointer touch-pan-y select-none" onclick={strumAll}
           onpointerdown={() => unlockAudio()} onpointermove={move} onpointerleave={() => lastX = undefined}>
-  <svg bind:this={svg} viewBox="0 0 120 {top + rows * fretGap + 6}" class="w-32" role="img" aria-label={chord}>
+  <svg bind:this={svg} viewBox="0 0 120 {top + rows * fretGap + 1}" class="w-32 block" role="img" aria-label={chord}>
     {#if base == 1}
       <rect x={left} y={top - 3} width={gap * 5} height="3" class="fill-gray-700"/>
     {:else}
@@ -65,6 +66,7 @@
     {/each}
   </svg>
   </button>
+  </div>
   <Button icon="player-play" label={t.jam.strum} size="sm" class="outlined" onclick={strumAll}/>
 {:else}
   <p class="text-sm text-muted">{t.jam.noDiagram}</p>

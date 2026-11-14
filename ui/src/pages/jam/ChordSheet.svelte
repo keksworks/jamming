@@ -17,7 +17,7 @@
     if (popover?.anchor == anchor) return popover = undefined
     const r = anchor.getBoundingClientRect()
     const style = innerWidth < 640 ? 'left: 0; right: 0; bottom: 0' :
-      `left: ${Math.max(8, Math.min(r.left, innerWidth - 460))}px; ` + (r.bottom + 260 < innerHeight ? `top: ${r.bottom + 4}px` : `bottom: ${innerHeight - r.top + 4}px`)
+      `left: ${Math.max(8, Math.min(r.left, innerWidth - 500))}px; ` + (r.bottom + 260 < innerHeight ? `top: ${r.bottom + 4}px` : `bottom: ${innerHeight - r.top + 4}px`)
     popover = {chord, style, anchor}
   }
 
@@ -46,7 +46,7 @@
 </div>
 
 {#if popover}
-  <div class="chord-popover fixed z-30 bg-surface border border-gray-200 shadow-lg p-4 rounded-t-lg sm:rounded-lg sm:w-[28rem] font-sans" style={popover.style}
+  <div class="chord-popover fixed z-30 bg-surface border border-gray-200 shadow-lg p-4 rounded-t-lg sm:rounded-lg sm:w-[30rem] font-sans" style={popover.style}
        role="dialog">
     <ChordPopover chord={popover.chord} onclose={() => popover = undefined}/>
   </div>
