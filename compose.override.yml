@@ -1,0 +1,6 @@
+# Local development overrides
+services:
+  db:
+    restart: no
+    ports:
+      - 5644:5432

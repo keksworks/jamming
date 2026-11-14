@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: .
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    depends_on:
+      - db
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - ENV=demo
+      - LOGGER_CLASS
+      - DB_URL=jdbc:postgresql://db/$DB_USER
+      - DB_USER
+      - DB_PASS
+      - DB_APP_PASS
+      - SMTP_HOST
+      - SMTP_PORT
+      - SMTP_USER
+      - SMTP_PASS
+      - MAIL_FROM
+      - OWN_DOMAIN
+      - GOOGLE_OAUTH_CLIENT_ID
+      - GOOGLE_OAUTH_CLIENT_SECRET
+
+  db:
+    restart: unless-stopped
+    image: postgres:18-alpine
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - data:/var/lib/postgresql
+    environment:
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASS
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+
+volumes:
+  data:
