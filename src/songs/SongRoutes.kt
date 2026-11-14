@@ -8,16 +8,29 @@ import klite.jdbc.NoTransaction
 import klite.logger
 import klite.warn
 import lyrics.LrcLibClient
+import java.net.URI
+import java.util.concurrent.Executors
 
 @Public
-class SongRoutes(private val repository: SongRepository, private val lrcLib: LrcLibClient) {
+class SongRoutes(private val repository: SongRepository, private val ultimateGuitar: UltimateGuitarClient, private val lrcLib: LrcLibClient) {
   private val log = logger()
 
-  /** Own songs (with chords) first, then lyrics from LRCLIB; no transaction to avoid holding DB connection while waiting for LRCLIB */
-  @GET @NoTransaction fun search(@QueryParam q: String): List<Song> {
-    val own = repository.search(q)
-    val lyrics = try { lrcLib.search(q) } catch (e: Exception) { log.warn("LRCLIB search failed: $e"); emptyList() }
-    return own + lyrics.filter { l -> own.none { it.isSame(l) } }
+  /**
+   * Own songs first, then chords from Ultimate Guitar, then lyrics from LRCLIB (external ones are searched in parallel, skipping failures).
+   * No transaction to avoid holding DB connection while waiting for external sites.
+   */
+  @GET @NoTransaction fun search(@QueryParam q: String): List<Song> = Executors.newVirtualThreadPerTaskExecutor().use { executor ->
+    val chords = executor.submit<List<Song>> { tryOrEmpty("Ultimate Guitar") { ultimateGuitar.search(q) } }
+    val lyrics = executor.submit<List<Song>> { tryOrEmpty("LRCLIB") { lrcLib.search(q) } }
+    listOf(repository.search(q), chords.get(), lyrics.get()).fold(emptyList()) { found, more -> found + more.filter { m -> found.none { it.isSame(m) } } }
+  }
+
+  /** Loads chords of a song found by [search] */
+  @GET("/ultimate-guitar") fun ultimateGuitar(@QueryParam url: URI) = ultimateGuitar.chords(url)
+
+  private fun tryOrEmpty(source: String, search: () -> List<Song>) = try { search() } catch (e: Exception) {
+    log.warn("$source search failed: $e")
+    emptyList()
   }
 
   /** Same title & artist is updated, previous versions are kept in change_history */

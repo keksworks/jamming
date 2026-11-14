@@ -38,9 +38,16 @@
     results = await api.get<Song[]>('songs?q=' + encodeURIComponent(query))
   }
 
-  function use(found: Song) {
-    song = found
+  /** Chords found on external sites are loaded only when picked */
+  async function use(found: Song) {
     results = undefined
+    if (found.sheet || !found.url) return song = found
+    const loaded = await api.get<Song>('songs/ultimate-guitar?url=' + encodeURIComponent(found.url))
+    song = {...loaded, sheet: toChordPro(loaded.sheet)}
+  }
+
+  function source(url: string) {
+    return new URL(url).hostname.replace(/^(www|tabs)\./, '')
   }
 
   /** Songs with chords are saved to our own DB for others to find */
@@ -89,7 +96,8 @@
         {#each results as found (found.id)}
           <li><button type="button" class="w-full flex items-center gap-2 py-2 hover:bg-gray-50" onclick={() => use(found)}>
             <b>{found.title}</b> <span class="text-gray-500 flex-1">{found.artist ?? ''}</span>
-            {#if hasChords(found.sheet)}<span class="badge">{t.song.withChords}</span>{:else}<span class="text-sm text-muted">{t.song.lyricsOnly}</span>{/if}
+            {#if found.url}<span class="text-xs text-muted">{source(found.url)}</span>{/if}
+            {#if found.url || hasChords(found.sheet)}<span class="badge">{t.song.withChords}</span>{:else}<span class="text-sm text-muted">{t.song.lyricsOnly}</span>{/if}
           </button></li>
         {:else}
           <li class="py-2 text-muted">{t.song.noResults}</li>
@@ -105,6 +113,7 @@
       </div>
       <TextAreaField label={t.song.sheet} bind:value={song.sheet} maxlength={20000} rows={10} class="font-mono"/>
       <p class="text-sm text-gray-500">{t.song.sheetHelp}</p>
+      {#if song.url}<p class="text-sm">{t.song.source}: <a href={song.url} target="_blank" rel="noopener">{source(song.url)}</a></p>{/if}
       {#if chordQuery}
         <p class="text-sm flex flex-wrap gap-x-3">
           {t.song.findChords}

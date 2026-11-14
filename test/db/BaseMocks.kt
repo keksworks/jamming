@@ -13,6 +13,7 @@ import klite.StatusCodeException
 import klite.email.EmailSender
 import lyrics.LrcLibClient
 import songs.SongRepository
+import songs.UltimateGuitarClient
 import users.UserRepository
 import java.net.URI
 
@@ -25,6 +26,7 @@ abstract class BaseMocks {
     val emailSender = mock<EmailSender>(relaxed = true)
     val songRepository = mock<SongRepository>()
     val lrcLibClient = mock<LrcLibClient>()
+    val ultimateGuitarClient = mock<UltimateGuitarClient>()
     val jamRepository = mock<JamRepository>(relaxed = true)
 
     inline fun <reified T: Any> create() = registry.create(T::class)

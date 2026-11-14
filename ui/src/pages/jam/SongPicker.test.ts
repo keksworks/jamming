@@ -65,3 +65,17 @@ it('does not save lyrics without chords', async () => {
   expect(api.post).not.toHaveBeenCalled()
   await vi.waitFor(() => expect(onpick).toHaveBeenCalledWith(lyrics))
 })
+
+it('loads chords from Ultimate Guitar when picked, converted to inline chords', async () => {
+  const found = {...song, id: 'ug1', title: 'From UG', sheet: '', url: 'https://tabs.ultimate-guitar.com/tab/1'}
+  const get = vi.spyOn(api, 'get').mockImplementation(async (path: string) =>
+    path.startsWith('songs?') ? [found] : {...found, sheet: 'C    G\nWhen I find'})
+  const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick: vi.fn(), tab: 'song'})
+  await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
+  await fireEvent.submit(container.querySelector('form')!)
+  expect((await findByText('ultimate-guitar.com')).textContent).to.eq('ultimate-guitar.com')
+  await fireEvent.click(getByText('From UG'))
+  expect(get).toHaveBeenLastCalledWith('songs/ultimate-guitar?url=' + encodeURIComponent(found.url))
+  await vi.waitFor(() => expect(container.querySelector('textarea')!.value).to.eq('[C]When [G]I find'))
+  expect(container.querySelector('a[href="https://tabs.ultimate-guitar.com/tab/1"]')).to.exist
+})

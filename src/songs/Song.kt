@@ -2,6 +2,7 @@ package songs
 
 import db.Entity
 import db.Id
+import java.net.URI
 
 data class Song(
   val title: String,
@@ -9,6 +10,8 @@ data class Song(
   val sheet: String,
   val artist: String? = null,
   val key: String? = null,
+  /** Where the song was taken from, e.g. Ultimate Guitar */
+  val url: URI? = null,
   override val id: Id<Song> = Id()
 ): Entity<Song> {
   init { require(title.length <= 200 && (artist?.length ?: 0) <= 200 && sheet.length <= 20000) { "Too long" } }

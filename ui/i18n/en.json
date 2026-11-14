@@ -47,6 +47,7 @@
     "invalidProgression": "Use chords like C G Am F, or numerals like I V vi IV",
     "sheet": "Chords & lyrics",
     "sheetHelp": "Put chords in brackets: [Am]Hello [F]world, or paste chords above lyrics from any chord site",
+    "source": "Source",
     "findChords": "Find chords to copy & paste here:",
     "searchSongs": "Search songs",
     "noResults": "No songs found",

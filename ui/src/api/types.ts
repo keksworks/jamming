@@ -12,7 +12,7 @@ export interface Member {id: string; name: string}
 // class jams.Playback
 export interface Playback {beatsPerChord: number; bpm: number; startedAt?: Instant}
 // class songs.Song
-export interface Song {artist?: string; id: Id<Song>; key?: string; sheet: string; title: string; createdAt: Instant}
+export interface Song {artist?: string; id: Id<Song>; key?: string; sheet: string; title: string; url?: URI; createdAt: Instant}
 // class jams.Suggestion
 export interface Suggestion {by: string; id: Id<Suggestion>; key?: string; song?: Song; votes: Array<string>}
 // class jams.Jam

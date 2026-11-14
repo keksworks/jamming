@@ -13,3 +13,6 @@ create unique index songs_title_artist_idx on songs(lower(title), lower(coalesce
 
 --changeset song_history_trigger
 create trigger song_history_trigger after update on songs for each row execute procedure add_change_history();
+
+--changeset songs_url
+alter table songs add column url text;
