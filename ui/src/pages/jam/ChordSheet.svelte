@@ -18,7 +18,7 @@
           {#if part.chord}
             <b class="pr-2 rounded transition-colors {part.index == current ? 'current bg-primary-600 text-white px-1' : 'text-primary-700'}">{part.chord}</b>
           {/if}
-          <span>{part.text}</span>
+          <span>{part.text || ' '}</span>
         </span>
       {/each}
     </div>

@@ -8,3 +8,9 @@ it('renders chords above lyrics and highlights current', () => {
   expect(container.textContent).to.contain('Let it')
   expect(container.querySelector('.current')!.textContent).to.eq('G')
 })
+
+it('keeps text row for chords without text, so that all chords are aligned', () => {
+  const {container} = render(ChordSheet, {lines: parseSheet('[C] [F]').lines})
+  const texts = [...container.querySelectorAll('b + span')].map(s => s.textContent)
+  expect(texts).to.deep.eq([' ', ' '])
+})
