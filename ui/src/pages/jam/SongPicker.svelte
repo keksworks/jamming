@@ -27,7 +27,7 @@
 
   $: chordQuery = [song.title, song.artist].filter(s => s).join(' ') || query
 
-  function progression(name: keyof typeof progressions) {
+  function progression(name: keyof typeof progressions, root: string) {
     const numerals = progressions[name]
     const key = root + (isMinorProgression(numerals) ? 'm' : '')
     return {title: t.progressions[name], sheet: progressionSheet(numerals, key), key}
@@ -54,13 +54,13 @@
     <SelectField label={t.song.key} bind:value={root} options={keyOptions()} class="w-32"/>
     <ul class="divide-y divide-gray-200">
       {#each Object.keys(progressions) as (keyof typeof progressions)[] as name}
-        {@const song = progression(name)}
+        {@const p = progression(name, root)}
         <li class="flex items-center gap-3 py-2">
           <div class="flex-1">
-            <div class="font-medium">{song.title}</div>
-            <div class="text-sm text-gray-500 font-mono">{song.sheet.replace(/[[\]]/g, '').replace(/\n/g, ' ')}</div>
+            <div class="font-medium">{p.title}</div>
+            <div class="text-sm text-gray-500 font-mono">{p.sheet.replace(/[[\]]/g, '').replace(/\n/g, ' ')}</div>
           </div>
-          <Button label={actionLabel} class="outlined" onclick={() => onpick(song)}/>
+          <Button label={actionLabel} class="outlined" onclick={() => onpick(p)}/>
         </li>
       {/each}
     </ul>

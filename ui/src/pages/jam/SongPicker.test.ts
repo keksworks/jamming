@@ -7,6 +7,11 @@ it('picks a progression', async () => {
   expect(container.textContent).to.contain('C G Am F')
   await fireEvent.click(getAllByText('Pick')[0])
   expect(onpick).toHaveBeenCalledWith({title: 'Pop', sheet: '[C] [G] [Am] [F]', key: 'C'})
+
+  await fireEvent.change(container.querySelector('select')!, {target: {value: 'G'}})
+  expect(container.textContent).to.contain('G D Em C')
+  await fireEvent.click(getAllByText('Pick')[0])
+  expect(onpick).toHaveBeenLastCalledWith({title: 'Pop', sheet: '[G] [D] [Em] [C]', key: 'G'})
 })
 
 it('links to chord sites for the searched song', async () => {
