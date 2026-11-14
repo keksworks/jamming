@@ -41,7 +41,7 @@
   }
 </script>
 
-<section class="spaced rounded-lg bg-gray-50 p-4">
+<section class="card spaced p-4 sm:p-6">
   {#if jam.song}
     <div class="flex flex-wrap items-end gap-3">
       <div class="flex-1 min-w-40">
@@ -58,7 +58,7 @@
 
     {#if pos}
       <div class="flex items-baseline gap-6">
-        <span class="text-6xl font-bold text-primary-700">{countIn ? -pos.beat : sheet.chords[pos.index]}</span>
+        <span class="text-7xl font-extrabold tracking-tight gradient-text drop-shadow-sm">{countIn ? -pos.beat : sheet.chords[pos.index]}</span>
         {#if countIn}
           <span class="text-gray-500">{t.jam.getReady}</span>
         {:else}

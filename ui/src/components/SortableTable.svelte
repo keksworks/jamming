@@ -132,7 +132,7 @@
   @reference 'src/global.css';
 
   table {
-    @apply relative bg-white text-black min-w-full md:shadow-sm border-separate border-spacing-0;
+    @apply relative bg-surface text-gray-950 min-w-full md:shadow-sm border-separate border-spacing-0;
   }
 
   table :global(th), table :global(td) {
@@ -140,7 +140,7 @@
   }
 
   table thead th {
-    @apply text-xs font-medium tracking-wider sticky top-0 bg-white border-b-2 border-gray-200 border-solid;
+    @apply text-xs font-medium tracking-wider sticky top-0 bg-surface border-b-2 border-gray-200 border-solid;
   }
 
   table :global(th:last-child), :global(td:last-child:not(:first-child)) {

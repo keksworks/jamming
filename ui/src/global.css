@@ -15,15 +15,15 @@
   }
 
   h4, .h4 {
-    @apply text-xl font-semibold text-stone-900;
+    @apply text-xl font-semibold text-gray-900;
   }
 
   h5, .h5 {
-    @apply text-lg font-medium text-stone-900;
+    @apply text-lg font-medium text-gray-900;
   }
 
   h6, .h6 {
-    @apply text-base font-medium text-stone-900;
+    @apply text-base font-medium text-gray-900;
   }
 
   img, svg {
@@ -42,8 +42,20 @@
     cursor: pointer;
   }
 
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply text-gray-900 bg-canvas min-h-screen;
+    background-image:
+      radial-gradient(50rem 25rem at 0% -10%, color-mix(in oklab, var(--color-primary-500) 18%, transparent), transparent),
+      radial-gradient(40rem 25rem at 100% 0%, color-mix(in oklab, var(--color-accent-500) 12%, transparent), transparent);
+    background-attachment: fixed;
+  }
+
   a {
-    @apply text-primary-600 hover:text-primary-700;
+    @apply text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300;
   }
 
   table th, table td {
@@ -91,18 +103,41 @@
   --color-danger-950: #450a0a;
   --color-danger: #ef4444;
 
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
-  --color-primary: #3b82f6;
+  --color-primary-50: #f5f3ff;
+  --color-primary-100: #ede9fe;
+  --color-primary-200: #ddd6fe;
+  --color-primary-300: #c4b5fd;
+  --color-primary-400: #a78bfa;
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+  --color-primary-800: #5b21b6;
+  --color-primary-900: #4c1d95;
+  --color-primary-950: #2e1065;
+  --color-primary: #8b5cf6;
+
+  --color-accent-300: #f0abfc;
+  --color-accent-400: #e879f9;
+  --color-accent-500: #d946ef;
+  --color-accent-600: #c026d3;
+  --color-accent: #d946ef;
+
+  /* page background & cards/dialogs, swapped in dark mode below */
+  --color-canvas: #f8f7fb;
+  --color-surface: #ffffff;
+
+  /* violet-tinted grays, inverted in dark mode below, so that existing gray utilities adapt automatically */
+  --color-gray-50: #f8f7fb;
+  --color-gray-100: #f1f0f6;
+  --color-gray-200: #e5e3ed;
+  --color-gray-300: #d2cfdd;
+  --color-gray-400: #a19cb3;
+  --color-gray-500: #767089;
+  --color-gray-600: #5a5470;
+  --color-gray-700: #46405a;
+  --color-gray-800: #2e2a3d;
+  --color-gray-900: #1d1a28;
+  --color-gray-950: #110f18;
 
   --color-secondary-50: #f9fafb;
   --color-secondary-100: #f3f4f6;
@@ -116,6 +151,36 @@
   --color-secondary-900: #111827;
   --color-secondary-950: #030712;
   --color-secondary: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas: #0d0b14;
+    --color-surface: #17151f;
+    --color-gray-50: #15131d;
+    --color-gray-100: #1e1b29;
+    --color-gray-200: #2a2638;
+    --color-gray-300: #3a3549;
+    --color-gray-400: #5f5a73;
+    --color-gray-500: #8d889e;
+    --color-gray-600: #aca8bb;
+    --color-gray-700: #cac7d5;
+    --color-gray-800: #e1dfe9;
+    --color-gray-900: #efeef4;
+    --color-gray-950: #f8f7fb;
+  }
+}
+
+@utility gradient {
+  @apply bg-linear-to-r from-primary-600 to-accent-500;
+}
+
+@utility gradient-text {
+  @apply bg-linear-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent;
+}
+
+@utility card {
+  @apply bg-surface rounded-2xl shadow-sm ring-1 ring-gray-200 dark:shadow-none;
 }
 
 @utility text-muted {
@@ -136,7 +201,12 @@ html.loading {
   }
 
   .btn {
-    @apply inline-flex items-center justify-center min-w-28 px-4 py-2 rounded font-medium text-sm bg-primary-600 text-white hover:bg-primary-700 cursor-pointer;
+    @apply inline-flex items-center justify-center min-w-28 px-4 py-2 rounded-full font-medium text-sm cursor-pointer transition
+      disabled:opacity-50 disabled:cursor-default;
+  }
+
+  .btn.default {
+    @apply gradient text-white shadow-md shadow-primary-600/25 hover:brightness-110 hover:shadow-lg hover:shadow-accent-500/30;
   }
 
   .btn.sm {
@@ -152,26 +222,26 @@ html.loading {
   }
 
   .btn.secondary {
-    @apply bg-gray-100 text-black hover:bg-gray-200;
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200;
   }
 
   .btn.outline, .btn.outlined {
-    @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50;
+    @apply border border-gray-300 bg-surface text-gray-700 hover:bg-gray-100 hover:border-gray-400;
   }
 
   .badge {
-    @apply inline-flex items-center gap-1 bg-primary-100 text-primary-800 text-sm rounded-full px-2 py-0.5 shrink-0;
+    @apply inline-flex items-center gap-1 bg-primary-100 text-primary-800 dark:bg-primary-900/60 dark:text-primary-200 text-sm rounded-full px-2 py-0.5 shrink-0;
   }
 }
 
 /* Unlayered to win over FormField's unlayered .form-field input styles */
 .chip-input {
-  @apply flex flex-wrap items-center gap-1 py-1.5 px-2 border border-gray-300 bg-white rounded-md shadow-sm text-sm
+  @apply flex flex-wrap items-center gap-1 py-1.5 px-2 border border-gray-300 bg-surface rounded-md shadow-sm text-sm
     focus-within:ring-1 focus-within:ring-primary-500 focus-within:border-primary-500 cursor-text min-h-[2.375rem];
 }
 
 .chip-input .chip-text-input {
-  @apply flex-1 min-w-[5rem] border-none outline-none bg-transparent text-black shadow-none p-0 py-0.5 text-sm
+  @apply flex-1 min-w-[5rem] border-none outline-none bg-transparent text-gray-950 shadow-none p-0 py-0.5 text-sm
     focus:ring-0 focus:shadow-none;
 }
 

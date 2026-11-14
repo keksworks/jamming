@@ -21,7 +21,7 @@
 </script>
 
 <div class="flex items-center gap-3 flex-wrap">
-  <span class="text-3xl font-mono font-bold tracking-widest">{jam.code}</span>
+  <span class="text-3xl font-mono font-extrabold tracking-widest gradient-text">{jam.code}</span>
   <span class="flex items-center gap-1 text-sm text-gray-600" title={members.map(m => m.name).join(', ')}>
     <Icon name="users"/> {t.jam.members.replace('{count}', members.length + '')}
   </span>
@@ -30,8 +30,8 @@
 
 <Modal bind:show={showInvite} title={t.jam.invite}>
   <div class="spaced text-center">
-    <div class="qr w-64 max-w-full mx-auto">{@html renderSVG(link, {border: 1})}</div>
-    <p class="text-6xl font-mono font-bold tracking-widest">{jam.code}</p>
+    <div class="qr w-64 max-w-full mx-auto rounded-2xl overflow-hidden ring-4 ring-primary-500/30">{@html renderSVG(link, {border: 1})}</div>
+    <p class="text-6xl font-mono font-extrabold tracking-widest gradient-text">{jam.code}</p>
     <p class="text-gray-600">{t.jam.inviteHelp}</p>
     <a href={link} class="block break-all">{link}</a>
     <div class="flex gap-2 justify-center">

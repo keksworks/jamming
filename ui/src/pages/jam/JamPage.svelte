@@ -54,7 +54,7 @@
   <p class="text-center pt-10">{t.jam.notFound}</p>
   <p class="text-center pt-4"><Link to="/" label={t.home.start}/></p>
 {:else if !joined}
-  <Form submit={join} class="max-w-md mx-auto spaced sm:pt-12">
+  <Form submit={join} class="card max-w-md mx-auto spaced p-6 mt-6 sm:mt-12">
     <FormField label={t.home.yourName} bind:value={name} maxlength={30} autocomplete="nickname" class="lg"/>
     <Button type="submit" label={t.home.join} size="lg" class="default w-full"/>
   </Form>
@@ -67,7 +67,7 @@
 
   {#if shared}
     <Modal bind:show={showShared} title={t.song.shared} wide>
-      {#if !shared.sheet}<p class="mb-4 text-sm text-warning-700">{t.song.sharedLinkOnly}</p>{/if}
+      {#if !shared.sheet}<p class="mb-4 text-sm text-warning-700 dark:text-warning-300">{t.song.sharedLinkOnly}</p>{/if}
       <SongPicker song={shared} tab="song" actionLabel={$jam.song ? t.song.suggest : t.song.playNow} onpick={pickShared}/>
     </Modal>
   {/if}

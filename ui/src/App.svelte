@@ -6,7 +6,7 @@
   import HomePage from 'src/pages/HomePage.svelte'
   import NotFoundPage from 'src/pages/NotFoundPage.svelte'
   import LoginPage from 'src/pages/login/LoginPage.svelte'
-  import LoginButton from 'src/pages/login/LoginButton.svelte'
+  import Icon from 'src/icons/Icon.svelte'
   import JamPage from 'src/pages/jam/JamPage.svelte'
   import SharePage from 'src/pages/share/SharePage.svelte'
 
@@ -21,8 +21,11 @@
 
 <Toasts/>
 
-<menu class="flex gap-4 p-4 bg-gray-100 items-center">
-  <Link to="/" label={t.title} class="font-bold text-lg text-black"/>
+<menu class="sticky top-0 z-30 flex gap-4 px-4 py-3 items-center bg-surface/70 backdrop-blur-md border-b border-gray-200">
+  <Link to="/" class="flex items-center gap-2 text-xl font-extrabold tracking-tight">
+    <span class="gradient text-white rounded-xl p-1.5 flex shadow-md shadow-primary-600/30"><Icon name="music"/></span>
+    <span class="gradient-text">{t.title}</span>
+  </Link>
   <span class="ml-auto">
     {#if $user}
       <span class="flex items-center gap-2">
@@ -33,7 +36,7 @@
         <button class="btn outlined text-sm" on:click={logout}>{t.login.logout}</button>
       </span>
     {:else if $activePath !== '/login'}
-      <LoginButton redirect={location.pathname} class="default"/>
+<!--      <LoginButton redirect={location.pathname} class="default"/>-->
     {/if}
   </span>
 </menu>

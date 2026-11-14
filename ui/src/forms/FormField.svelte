@@ -43,7 +43,7 @@
   }
 
   :global(.form-field input), :global(.form-field select), :global(.form-field textarea) {
-    @apply block w-full py-2 px-3 border border-gray-300 bg-white text-black rounded-md shadow-sm text-sm focus:outline-none focus:ring-primary-500 focus:ring-1 focus:border-primary-500 disabled:bg-gray-100;
+    @apply block w-full py-2 px-3 border border-gray-300 bg-surface text-gray-950 rounded-md shadow-sm text-sm focus:outline-none focus:ring-primary-500 focus:ring-1 focus:border-primary-500 disabled:bg-gray-100;
   }
 
   :global(.form-field.lg input), :global(.form-field.lg select), :global(.form-field.lg textarea) {
