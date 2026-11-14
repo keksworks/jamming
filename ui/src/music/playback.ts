@@ -1,4 +1,5 @@
 import type {Playback} from 'src/api/types'
+import {frequencies, guitarVoicing} from './strings'
 
 export function beatMs(playback: Playback) {
   return 60000 / playback.bpm
@@ -69,6 +70,13 @@ export function pluck(frequency: number, volume = 0.3) {
 /** Guitar strum: plucks strings one after another, from low to high */
 export function strum(frequencies: (number|undefined)[], delayMs = 30) {
   frequencies.filter(f => f).forEach((f, i) => setTimeout(() => pluck(f!), i * delayMs))
+}
+
+/** Strums the easiest guitar fingering of the chord */
+export async function strumChord(chord: string) {
+  await unlockAudio()
+  const frets = guitarVoicing(chord)
+  if (frets) strum(frequencies(frets))
 }
 
 let pianoOutput: AudioNode|undefined

@@ -15,6 +15,7 @@ import klite.oauth.GoogleOAuthClient
 import klite.oauth.OAuthRoutes
 import klite.oauth.OAuthUserProvider
 import songs.SongRoutes
+import songs.SongSuggestionRoutes
 import java.lang.management.ManagementFactory.getRuntimeMXBean
 import java.nio.file.Path
 import kotlin.system.exitProcess
@@ -59,6 +60,8 @@ fun main() {
       before<AccessChecker>()
 
       annotated<JamRoutes>("/jams")
+
+      annotated<SongSuggestionRoutes>("/songs/suggestions")
 
       rateLimit(10, 1.minutes)
       annotated<SongRoutes>("/songs")

@@ -7,6 +7,8 @@
   import FormField from 'src/forms/FormField.svelte'
   import SelectField from 'src/forms/SelectField.svelte'
   import TextAreaField from 'src/forms/TextAreaField.svelte'
+  import {onDestroy} from 'svelte'
+  import {debounce} from 'src/shared/debounce'
   import {hasChords, isValidProgression, keyOptions, progressions, progressionSong, toChordPro} from 'src/music/chords'
 
   export let actionLabel: string
@@ -34,8 +36,26 @@
     return song.sheet.replace(/[[\]]/g, '').replace(/\n/g, ' ')
   }
 
+  /** Only the latest request may update results */
+  let latestRequest = 0
+  /** Query for which full search was already done, so that late suggestions don't replace its results */
+  let searched = ''
+
+  /** Own songs while typing, other sources only on explicit search */
+  const suggest = debounce(async (q: string) => {
+    if (q == searched) return
+    const request = ++latestRequest
+    const found = q.trim().length > 1 ? await api.get<Song[]>('songs/suggestions?q=' + encodeURIComponent(q)) : []
+    if (request == latestRequest) results = found.length ? found : undefined
+  }, 400)
+  $: suggest(query)
+  onDestroy(suggest.cancel)
+
   async function search() {
-    results = await api.get<Song[]>('songs?q=' + encodeURIComponent(query))
+    searched = query
+    const request = ++latestRequest
+    const found = await api.get<Song[]>('songs?q=' + encodeURIComponent(query))
+    if (request == latestRequest) results = found
   }
 
   /** Chords found on external sites are loaded only when picked */
@@ -87,9 +107,10 @@
   </div>
 {:else}
   <div class="spaced">
-    <Form submit={search} class="flex gap-2 items-end">
-      <FormField label={t.song.searchSongs} bind:value={query} type="search" class="flex-1"/>
-      <Button type="submit" icon="search" class="outlined"/>
+    <Form submit={search}>
+      <FormField label={t.song.searchSongs} bind:value={query} type="search">
+        <svelte:fragment slot="after"><Button type="submit" icon="search" title={t.song.searchSongs} class="outlined ml-2"/></svelte:fragment>
+      </FormField>
     </Form>
     {#if results}
       <ul class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
@@ -111,7 +132,7 @@
         <FormField label={t.song.artist} bind:value={song.artist} required={false} class="flex-1 min-w-40"/>
         <SelectField label={t.song.key} bind:value={song.key} options={{...keyOptions(), ...keyOptions(true)}} emptyOption={t.song.detectKey} required={false}/>
       </div>
-      <TextAreaField label={t.song.sheet} bind:value={song.sheet} maxlength={20000} rows={10} class="font-mono"/>
+      <TextAreaField label={t.song.sheet} bind:value={song.sheet} maxlength={20000} rows={10} class="[&_textarea]:font-mono"/>
       <p class="text-sm text-gray-500">{t.song.sheetHelp}</p>
       {#if song.url}<p class="text-sm">{t.song.source}: <a href={song.url} target="_blank" rel="noopener">{source(song.url)}</a></p>{/if}
       {#if chordQuery}

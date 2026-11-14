@@ -1,6 +1,9 @@
 import {fireEvent, render} from '@testing-library/svelte'
 import ChordSheet from './ChordSheet.svelte'
 import {parseSheet} from 'src/music/chords'
+import {strumChord} from 'src/music/playback'
+
+vi.mock('src/music/playback', () => ({strumChord: vi.fn()}))
 
 it('renders chords above lyrics and highlights current', () => {
   const {container} = render(ChordSheet, {lines: parseSheet('{c: Chorus}\n[C]Let it [G]be').lines, current: 1})
@@ -11,7 +14,7 @@ it('renders chords above lyrics and highlights current', () => {
 
 it('keeps text row for chords without text, so that all chords are aligned', () => {
   const {container} = render(ChordSheet, {lines: parseSheet('[C] [F]').lines})
-  const texts = [...container.querySelectorAll('.chord + span')].map(s => s.textContent)
+  const texts = [...container.querySelectorAll('.chord')].map(c => c.parentElement!.nextElementSibling!.textContent)
   expect(texts).to.deep.eq([' ', ' '])
 })
 
@@ -32,4 +35,11 @@ it('shows chord diagrams on click, closes on second click or Escape', async () =
   await fireEvent.click(am)
   await fireEvent.keyUp(window, {key: 'Escape'})
   expect(popover()).to.be.undefined
+})
+
+it('plays chord with play button, without opening diagrams', async () => {
+  const {container} = render(ChordSheet, {lines: parseSheet('[Am]Hello').lines})
+  await fireEvent.click(container.querySelector('.chord-play')!)
+  expect(strumChord).toHaveBeenCalledWith('Am')
+  expect(container.querySelector('.chord-popover')).not.to.exist
 })

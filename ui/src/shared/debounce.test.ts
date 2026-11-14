@@ -25,3 +25,13 @@ it('debounces', () => {
   vi.advanceTimersByTime(300)
   expect(f.mock.calls.length).to.eq(3)
 })
+
+it('can be cancelled', () => {
+  vi.useFakeTimers()
+  const f = vi.fn()
+  const debounced = debounce(f, 300)
+  debounced('Hello')
+  debounced.cancel()
+  vi.advanceTimersByTime(300)
+  expect(f).not.toHaveBeenCalled()
+})

@@ -49,3 +49,11 @@ class SongRoutesTest: BaseMocks() {
     verify { songRepository.save(song) }
   }
 }
+
+class SongSuggestionRoutesTest: BaseMocks() {
+  @Test fun `suggests only own songs`() {
+    every { songRepository.search("let", 8) } returns listOf(song)
+    expect(SongSuggestionRoutes(songRepository).suggest("let")).toEqual(listOf(song))
+    verify(exactly = 0) { ultimateGuitarClient.search(any()) }
+  }
+}

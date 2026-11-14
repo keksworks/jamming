@@ -36,3 +36,9 @@ class SongRoutes(private val repository: SongRepository, private val ultimateGui
   /** Same title & artist is updated, previous versions are kept in change_history */
   @POST fun save(song: Song) = song.copy(id = repository.bySame(song)?.id ?: song.id).also { repository.save(it) }
 }
+
+/** Quick suggestions from own songs while typing, cheap enough not to be rate limited */
+@Public
+class SongSuggestionRoutes(private val repository: SongRepository) {
+  @GET fun suggest(@QueryParam q: String) = repository.search(q, limit = 8)
+}

@@ -79,3 +79,12 @@ it('loads chords from Ultimate Guitar when picked, converted to inline chords', 
   await vi.waitFor(() => expect(container.querySelector('textarea')!.value).to.eq('[C]When [G]I find'))
   expect(container.querySelector('a[href="https://tabs.ultimate-guitar.com/tab/1"]')).to.exist
 })
+
+it('suggests own songs after typing stops, without searching other sources', async () => {
+  const get = vi.spyOn(api, 'get').mockResolvedValue([song])
+  const {container, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick: vi.fn(), tab: 'song'})
+  await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let'}})
+  expect(get).not.toHaveBeenCalled()
+  await findByText(song.title)
+  expect(get).toHaveBeenCalledExactlyOnceWith('songs/suggestions?q=let')
+})
