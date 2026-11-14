@@ -5,6 +5,7 @@
   import Modal from 'src/components/Modal.svelte'
   import Icon from 'src/icons/Icon.svelte'
   import {showToast} from 'src/stores/toasts'
+  import {renderSVG} from 'uqr'
 
   export let jam: Jam
 
@@ -29,6 +30,7 @@
 
 <Modal bind:show={showInvite} title={t.jam.invite}>
   <div class="spaced text-center">
+    <div class="qr w-64 max-w-full mx-auto">{@html renderSVG(link, {border: 1})}</div>
     <p class="text-6xl font-mono font-bold tracking-widest">{jam.code}</p>
     <p class="text-gray-600">{t.jam.inviteHelp}</p>
     <a href={link} class="block break-all">{link}</a>
