@@ -8,6 +8,7 @@
   import LoginPage from 'src/pages/login/LoginPage.svelte'
   import LoginButton from 'src/pages/login/LoginButton.svelte'
   import JamPage from 'src/pages/jam/JamPage.svelte'
+  import SharePage from 'src/pages/share/SharePage.svelte'
 
   const pages = {
     '/': {title: t.home.title, component: HomePage},
@@ -40,6 +41,7 @@
 <main class="p-4">
   <Router routes={pages}>
     <Route path="/login" component={LoginPage}/>
+    <Route path="/share" component={SharePage}/>
     <Route path="/:code" let:code><JamPage {code}/></Route>
     <Route component={NotFoundPage}/>
   </Router>

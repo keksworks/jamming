@@ -3,6 +3,8 @@ import api from 'src/api/api'
 import type {Id, Jam, Member, Playback, Song, Suggestion} from 'src/api/types'
 
 export const jam = writable<Jam|undefined>()
+/** Song shared from another app, to be played or suggested in a jam */
+export const pendingSong = writable<Song|undefined>()
 
 export const me: Member = {
   id: localStorage['memberId'] ??= crypto.randomUUID(),
@@ -48,6 +50,7 @@ export async function createJam() {
 export async function connect(code: string) {
   jam.set(undefined)
   update(await api.get<Jam>('jams/' + code))
+  localStorage['lastJam'] = code
   const events = new EventSource(`/api/jams/${code}/events?memberId=${me.id}&name=${encodeURIComponent(me.name)}`)
   events.onmessage = e => update(JSON.parse(e.data))
   return () => events.close()

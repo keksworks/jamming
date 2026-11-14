@@ -43,7 +43,9 @@
     "searchLyrics": "Search lyrics",
     "noResults": "No lyrics found",
     "playNow": "Play now",
-    "suggest": "Suggest"
+    "suggest": "Suggest",
+    "shared": "Shared song",
+    "sharedLinkOnly": "Only a link was shared. To import chords, select the chords & lyrics text on the page and share the selection instead."
   },
   "suggestions": {
     "title": "Up next",

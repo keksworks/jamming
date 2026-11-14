@@ -13,9 +13,9 @@
   export let onpick: (song: Song) => void
 
   const tabs = ['progressions', 'song'] as const
-  let tab: typeof tabs[number] = 'progressions'
+  export let tab: typeof tabs[number] = 'progressions'
   let root = 'C'
-  let song = {} as Song
+  export let song = {} as Song
   let query = ''
   let results: Lyrics[]|undefined
 
