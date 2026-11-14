@@ -3,4 +3,4 @@ services:
   db:
     restart: no
     ports:
-      - 5644:5432
+      - 5791:5432

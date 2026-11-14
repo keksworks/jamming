@@ -1,23 +1,16 @@
-# Klite starter project
+# Jamming.me
 
-**Don't forget to update this file with your own project description.**
+A PWA for jamming together in sync: start a jam, let people nearby join by scanning a QR code or entering a short code,
+pick a chord progression (or a song with lyrics) and everyone sees the same chords, highlighted in time with a shared beat.
+Members can suggest the next song, progression or key and vote on suggestions.
 
-This is a preconfigured sample/starter project with Kotlin/Klite with some best-practices:
+* Jams are anonymous and kept in server memory - no login needed to start or join
+* Real-time sync via Server-Sent Events, beat is synchronized using server clock offset
+* Built-in library of common chord progressions, transposable to any key
+* Lyrics search via [LRCLIB](https://lrclib.net), ChordPro or "chords over lyrics" text can be pasted from any chord site
 
-* Simple src/test directory structure for backend code
-* Committed `.env` file for dev configuration
-* PostgreSQL in Docker Compose
-* [DB migrations](db) creating:
-  * Less privileged app user
-  * change_history table and triggers
-* Unit tests
-* Internationalization
-* TypeScript types generation for frontend
-* [UI](ui) with Vite/Svelte/TailwindCSS - get more components from [Svelte Sample Repo](https://github.com/keksworks/svelte-sample)
-
-Follows [The Pure Code Manifesto](https://github.com/keksworks/manifesto) principles.
-
-Check [Klite Tutorial](https://github.com/keksworks/klite/blob/main/TUTORIAL.md) if you want to start from scratch with Klite.
+Built with Kotlin/[Klite](https://github.com/keksworks/klite) and Svelte/TailwindCSS,
+following [The Pure Code Manifesto](https://github.com/keksworks/manifesto) principles.
 
 ## Prerequisites
 

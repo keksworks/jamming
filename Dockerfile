@@ -33,7 +33,7 @@ ENV JAVA_TOOL_OPTIONS="-Xss256K -XX:MaxRAMPercentage=60 -XX:+ExitOnOutOfMemoryEr
 
 # host.docker.internal works locally via compose extra_hosts; CI uses host network + localhost
 ARG AOT_DB_HOST=host.docker.internal
-RUN ENV=prod DB_URL=jdbc:postgresql://$AOT_DB_HOST:5644/user java -XX:AOTCacheOutput=aot.cache -jar *.jar || true
+RUN ENV=prod DB_URL=jdbc:postgresql://$AOT_DB_HOST:5791/jamming java -XX:AOTCacheOutput=aot.cache -jar *.jar || true
 
 USER user
 CMD java -XX:AOTCache=aot.cache -jar *.jar

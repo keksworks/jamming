@@ -32,12 +32,3 @@
   * All design should be responsive and mobile-first, using TailwindCSS classes, not custom CSS unless necessary
 * Always add translations for all supported languages in `ui/i18n`
 * Never commit code yourself, give developer an opportunity to review changes first
-
-# New project based on this template
-
-When running for the first time on a new project created from this klite-starter template,
-make the following changes first:
-
-* Rename the project, update `index.html`, `en.json` and `README.md` with new name and short description
-* Change database name, username and password in `.env`, also use a random new mapped port in `compose.override.yml`
-* Remove this section from here
