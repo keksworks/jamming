@@ -29,6 +29,8 @@ fun main() {
     sessionStore = UserSessionStore(db),
     httpExchangeCreator = ::XForwardedHttpExchange
   ).apply {
+    if (Config.isProd) enforceCanonicalHost("jamming.me")
+
     use(DBModule(db))
     use<RequestTransactionHandler>()
 
