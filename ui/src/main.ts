@@ -14,3 +14,5 @@ if (auth) initSession(auth)
 
 mount(App, {target: document.getElementById('app')!})
 document.getElementById('spinner')!.parentElement!.hidden = true
+
+if (import.meta.env.PROD) navigator.serviceWorker?.register('/sw.js')

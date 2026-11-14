@@ -1,8 +1,70 @@
 {
-  "title": "Klite/Svelte starter",
+  "title": "Jamming.me",
   "home": {
     "title": "Home",
-    "welcome": "Welcome to Klite/Svelte starter"
+    "tagline": "Jam together, in sync",
+    "description": "Start a jam, invite people nearby, and everyone sees the same chords in time with the beat. Suggest the next song or key and vote together.",
+    "yourName": "Your name",
+    "start": "Start a jam",
+    "code": "Jam code",
+    "join": "Join"
+  },
+  "jam": {
+    "notFound": "Jam not found, it may have ended",
+    "members": "{count} jamming",
+    "invite": "Invite",
+    "inviteText": "Join my jam on Jamming.me",
+    "inviteHelp": "Open the link or enter the code on jamming.me to join",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "copied": "Link copied",
+    "nothingPlaying": "Nothing playing yet",
+    "pickSong": "Pick a song",
+    "changeSong": "Change song",
+    "key": "Key",
+    "play": "Play",
+    "stop": "Stop",
+    "bpm": "BPM",
+    "beatsPerChord": "Beats per chord",
+    "metronome": "Metronome",
+    "next": "Next",
+    "getReady": "Get ready"
+  },
+  "song": {
+    "progressions": "Progressions",
+    "song": "Song",
+    "title": "Title",
+    "artist": "Artist",
+    "key": "Key",
+    "detectKey": "From first chord",
+    "sheet": "Chords & lyrics",
+    "sheetHelp": "Put chords in brackets: [Am]Hello [F]world, or paste chords above lyrics from any chord site",
+    "searchLyrics": "Search lyrics",
+    "noResults": "No lyrics found",
+    "playNow": "Play now",
+    "suggest": "Suggest"
+  },
+  "suggestions": {
+    "title": "Up next",
+    "empty": "No suggestions yet",
+    "suggestSong": "Suggest song",
+    "suggestKey": "Suggest key",
+    "inKey": "in {key}",
+    "by": "by {name}",
+    "vote": "Vote",
+    "accept": "Play",
+    "remove": "Remove"
+  },
+  "progressions": {
+    "pop": "Pop",
+    "fifties": "50s",
+    "sadPop": "Sad pop",
+    "jazz": "Jazz ii–V–I",
+    "blues": "12-bar blues",
+    "canon": "Canon",
+    "andalusian": "Andalusian",
+    "minorRock": "Minor rock",
+    "mixolydian": "Mixolydian rock"
   },
   "login": {
     "link": "Login",

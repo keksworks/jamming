@@ -1,5 +1,6 @@
 import auth.*
 import db.initDB
+import jams.JamRoutes
 import klite.*
 import klite.RequestMethod.GET
 import klite.annotations.annotated
@@ -13,7 +14,7 @@ import klite.oauth.AuthRoutes
 import klite.oauth.GoogleOAuthClient
 import klite.oauth.OAuthRoutes
 import klite.oauth.OAuthUserProvider
-import todos.TodoRoutes
+import lyrics.LyricsRoutes
 import java.lang.management.ManagementFactory.getRuntimeMXBean
 import java.nio.file.Path
 import kotlin.system.exitProcess
@@ -51,14 +52,16 @@ fun main() {
       }
 
       post("/js-error") { logger("js-error").error(rawBody) }
+      get("/time") { System.currentTimeMillis() }
 
       if (!Config.isProd) annotated<FakeAuthRoutes>()
 
       before<AccessChecker>()
 
-      annotated<TodoRoutes>("/todos")
+      annotated<JamRoutes>("/jams")
 
       rateLimit(10, 1.minutes)
+      annotated<LyricsRoutes>("/lyrics")
       annotated<AuthRoutes>(annotations = listOf(Public()))
       annotated<EmailAuthRoutes>("/auth", listOf(Public()))
     }

@@ -1,0 +1,10 @@
+import {render} from '@testing-library/svelte'
+import ChordSheet from './ChordSheet.svelte'
+import {parseSheet} from 'src/music/chords'
+
+it('renders chords above lyrics and highlights current', () => {
+  const {container} = render(ChordSheet, {lines: parseSheet('{c: Chorus}\n[C]Let it [G]be').lines, current: 1})
+  expect(container.textContent).to.contain('Chorus')
+  expect(container.textContent).to.contain('Let it')
+  expect(container.querySelector('.current')!.textContent).to.eq('G')
+})
