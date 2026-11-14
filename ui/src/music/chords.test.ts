@@ -102,3 +102,16 @@ it('pianoNotes', () => {
   expect(pianoNotes('Am7')).to.deep.eq([57, 60, 64, 67])
   expect(pianoNotes('D/F#')).to.deep.eq([42, 50, 54, 57])
 })
+
+it('chord lines with repeat markers are recognized', () => {
+  expect(toChordPro('{c: Intro}\nBm  A  E    x4\n| G | D | (x2)')).to.eq('{c: Intro}\n[Bm] [A] [E]    x4\n| [G] | [D] | (x2)')
+  expect(toChordPro('C       G   x2\nLet it be')).to.eq('[C]Let it b[G]e  x2')
+  expect(toChordPro('1 2 3 4\nLyrics')).to.eq('1 2 3 4\nLyrics')
+})
+
+it('parseSheet makes raw chord lines playable too', () => {
+  const {lines, chords} = parseSheet('Bm  A  E    x4')
+  expect(chords).to.deep.eq(['Bm', 'A', 'E'])
+  expect(lines[0].at(-1)).to.deep.eq({chord: 'E', text: '    x4', index: 2})
+  expect(parseSheet('When I find myself').chords).to.deep.eq([])
+})

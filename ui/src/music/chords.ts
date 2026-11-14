@@ -88,7 +88,7 @@ export function parseSheet(sheet: string, semitones = 0, flat = false) {
   const lines = sheet.split('\n').map(line => {
     const directive = line.trim().match(/^\{(\w+)(?::\s*(.*))?}$/)
     if (directive) return ['c', 'comment', 'ci', 'cb'].includes(directive[1]) ? [{text: '', label: directive[2]}] : undefined
-    const tokens = line.split(/\[([^\]]*)]/)
+    const tokens = (isChordLine(line) ? bracketChords(line) : line).split(/\[([^\]]*)]/)
     const parts: SheetPart[] = tokens[0] ? [{text: tokens[0]}] : []
     for (let i = 1; i < tokens.length; i += 2) {
       if (isChord(tokens[i])) {
@@ -105,9 +105,19 @@ export function hasChords(sheet: string) {
   return parseSheet(sheet).chords.length > 0
 }
 
+/** Repeat markers (x4, 2x, (x2)) and bar separators can be on chord lines */
+function isChordLineExtra(token: string) {
+  return /^\(?[x×]?\d+[x×]?\)?$/i.test(token) || /^[|%-]+$/.test(token)
+}
+
+/** Line of only chords (without brackets), e.g. `Bm  A  E  x4` */
 function isChordLine(line: string) {
-  const tokens = line.trim().split(/\s+/).filter(t => t != '|')
-  return tokens[0] && tokens.every(isChord)
+  const tokens = line.trim().split(/\s+/).filter(t => t && !isChordLineExtra(t))
+  return tokens.length > 0 && tokens.every(isChord)
+}
+
+function bracketChords(line: string) {
+  return line.replace(/\S+/g, t => isChord(t) ? `[${t}]` : t).replace(/] +\[/g, '] [')
 }
 
 /** Converts "chords over lyrics" format (common on chord sites) to inline ChordPro */
@@ -122,14 +132,19 @@ export function toChordPro(text: string) {
     else {
       const next = lines[i + 1]
       const hasLyrics = next?.trim() && !isChordLine(next) && !next.trim().startsWith('[')
-      let lyrics = hasLyrics ? next : ''
-      const positions = [...line.matchAll(/\S+/g)].filter(m => m[0] != '|').reverse()
-      for (const m of positions) {
+      if (!hasLyrics) {
+        result.push(bracketChords(line))
+        continue
+      }
+      let lyrics = next
+      const tokens = [...line.matchAll(/\S+/g)]
+      for (const m of tokens.filter(m => isChord(m[0])).reverse()) {
         lyrics = lyrics.padEnd(m.index!)
         lyrics = lyrics.slice(0, m.index) + `[${m[0]}]` + lyrics.slice(m.index)
       }
-      result.push(hasLyrics ? lyrics.trimEnd() : lyrics.replace(/] +\[/g, '] ['))
-      if (hasLyrics) i++
+      const extras = tokens.map(m => m[0]).filter(t => !isChord(t) && t != '|')
+      result.push(lyrics.trimEnd() + (extras.length ? '  ' + extras.join(' ') : ''))
+      i++
     }
   }
   return result.join('\n')
