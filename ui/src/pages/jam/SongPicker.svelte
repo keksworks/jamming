@@ -19,6 +19,14 @@
   let query = ''
   let results: Lyrics[]|undefined
 
+  const chordSites = {
+    'Ultimate Guitar': 'https://www.ultimate-guitar.com/search.php?search_type=title&value=',
+    'Chordie': 'https://www.chordie.com/results.php?q=',
+    'Google': 'https://www.google.com/search?q=chords+'
+  }
+
+  $: chordQuery = [song.title, song.artist].filter(s => s).join(' ') || query
+
   function progression(name: keyof typeof progressions) {
     const numerals = progressions[name]
     const key = root + (isMinorProgression(numerals) ? 'm' : '')
@@ -83,6 +91,14 @@
       </div>
       <TextAreaField label={t.song.sheet} bind:value={song.sheet} maxlength={20000} rows={10} class="font-mono"/>
       <p class="text-sm text-gray-500">{t.song.sheetHelp}</p>
+      {#if chordQuery}
+        <p class="text-sm flex flex-wrap gap-x-3">
+          {t.song.findChords}
+          {#each Object.entries(chordSites) as [site, url]}
+            <a href={url + encodeURIComponent(chordQuery)} target="_blank" rel="noopener">{site}</a>
+          {/each}
+        </p>
+      {/if}
       <Button type="submit" label={actionLabel}/>
     </Form>
   </div>

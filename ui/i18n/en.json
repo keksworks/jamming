@@ -39,6 +39,7 @@
     "detectKey": "From first chord",
     "sheet": "Chords & lyrics",
     "sheetHelp": "Put chords in brackets: [Am]Hello [F]world, or paste chords above lyrics from any chord site",
+    "findChords": "Find chords to copy & paste here:",
     "searchLyrics": "Search lyrics",
     "noResults": "No lyrics found",
     "playNow": "Play now",
