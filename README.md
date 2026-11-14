@@ -64,9 +64,11 @@ The easiest way to deploy is via Docker compose:
 This will pull/build and start the application and the database.
 
 # TODO ideas
-* Add Karaoke support with inline YouTube video
 * Add a projector mode for displaying lyrics and chords on a big screen
 * Make searching for songs easier
-* Start/Stop doesn't always make sense as chords not always pased linearly
-* Let nearby people join (bluetooth/local network?)
+* Start/Stop doesn't always make sense as chords not always passed linearly
+* Let nearby people join (local network/bluetooth?)
+
+Maybe:
+* Add Karaoke support with inline YouTube video
 * Offline mode for basement bars?
