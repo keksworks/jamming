@@ -15,6 +15,19 @@
   $: start = Math.floor(Math.min(...notes) / 12) * 12
   $: octaves = Math.max(2, Math.ceil((Math.max(...notes) + 1 - start) / 12))
   $: octaveStarts = Array.from({length: octaves}, (_, o) => start + o * 12)
+  /** White keys first, so that black keys are drawn on top of them */
+  $: keys = [
+    ...octaveStarts.flatMap((octave, o) => whitePitches.map((pitch, w) =>
+      ({note: octave + pitch, x: (o * 7 + w) * whiteWidth, width: whiteWidth, height: 60, black: false}))),
+    ...octaveStarts.flatMap((octave, o) => Object.entries(blackPitches).map(([pitch, w]) =>
+      ({note: octave + +pitch, x: (o * 7 + w + 1) * whiteWidth - blackWidth / 2, width: blackWidth, height: 36, black: true})))
+  ]
+
+  function keyClass(key: {note: number, black: boolean}) {
+    const inChord = notes.includes(key.note)
+    return key.black ? (inChord ? 'pressed fill-primary-700' : 'fill-gray-950 dark:fill-black') :
+      'stroke-gray-400 ' + (inChord ? 'pressed fill-primary-500' : 'fill-white')
+  }
 
   async function play(notes: number[]) {
     await unlockAudio()
@@ -23,21 +36,12 @@
 </script>
 
 {#if notes.length}
-  <button type="button" title={t.jam.playChord} class="cursor-pointer select-none" onclick={() => play(notes)}>
-  <svg viewBox="0 0 {octaves * 7 * whiteWidth} 60" class="w-56 max-w-full" role="img" aria-label={chord}>
-    {#each octaveStarts as octave, o}
-      {#each whitePitches as pitch, w}
-        <rect x={(o * 7 + w) * whiteWidth} y="0" width={whiteWidth} height="60" rx="1.5"
-              class="stroke-gray-400 {notes.includes(octave + pitch) ? 'pressed fill-primary-500' : 'fill-white'}"/>
-      {/each}
-    {/each}
-    {#each octaveStarts as octave, o}
-      {#each Object.entries(blackPitches) as [pitch, w]}
-        <rect x={(o * 7 + w + 1) * whiteWidth - blackWidth / 2} y="0" width={blackWidth} height="36" rx="1.5"
-              class="{notes.includes(octave + +pitch) ? 'pressed fill-primary-700' : 'fill-gray-950 dark:fill-black'}"/>
-      {/each}
+  <svg viewBox="0 0 {octaves * 7 * whiteWidth} 60" class="w-56 max-w-full select-none" role="group" aria-label={chord}>
+    {#each keys as key (key.note)}
+      <rect x={key.x} y="0" width={key.width} height={key.height} rx="1.5" role="button" tabindex="0"
+            class="key cursor-pointer outline-none active:opacity-60 focus-visible:opacity-75 {keyClass(key)}"
+            onclick={() => play([key.note])} onkeydown={(e: KeyboardEvent) => (e.key == 'Enter' || e.key == ' ') && play([key.note])}/>
     {/each}
   </svg>
-  </button>
   <Button icon="player-play" label={t.jam.playChord} size="sm" class="outlined" onclick={() => play(notes)}/>
 {/if}

@@ -15,10 +15,21 @@ it('keeps text row for chords without text, so that all chords are aligned', () 
   expect(texts).to.deep.eq([' ', ' '])
 })
 
-it('shows chord diagrams on click, closes on Escape', async () => {
-  const {container, getByText} = render(ChordSheet, {lines: parseSheet('[Am]Hello').lines})
-  await fireEvent.click(getByText('Am'))
-  expect(container.querySelector('.chord-popover h4')!.textContent).to.eq('Am')
+it('shows chord diagrams on click, closes on second click or Escape', async () => {
+  const {container} = render(ChordSheet, {lines: parseSheet('[Am]Hello [F]world').lines})
+  const [am, f] = container.querySelectorAll('.chord')
+  const popover = () => container.querySelector('.chord-popover h4')?.textContent
+  await fireEvent.pointerEnter(am)
+  expect(popover()).to.be.undefined
+
+  await fireEvent.click(am)
+  expect(popover()).to.eq('Am')
+  await fireEvent.click(f)
+  expect(popover()).to.eq('F')
+  await fireEvent.click(f)
+  expect(popover()).to.be.undefined
+
+  await fireEvent.click(am)
   await fireEvent.keyUp(window, {key: 'Escape'})
-  expect(container.querySelector('.chord-popover')).not.to.exist
+  expect(popover()).to.be.undefined
 })

@@ -6,5 +6,5 @@ it('shows guitar and piano diagrams', () => {
   expect(container.querySelector('h4')!.textContent).to.eq('Am')
   expect(container.textContent).to.contain('Guitar')
   expect(container.textContent).to.contain('Piano')
-  expect(container.querySelectorAll('svg[role=img]').length).to.eq(2)
+  expect(container.querySelectorAll('svg[aria-label=Am]').length).to.eq(2)
 })
