@@ -1,5 +1,25 @@
 import {fireEvent, render} from '@testing-library/svelte'
 import SongPicker from './SongPicker.svelte'
+import api from 'src/api/api'
+import {song} from 'src/api/testData'
+
+const lyrics = {...song, id: 'l1', title: 'Lyrics', sheet: 'Just words', key: undefined}
+
+afterEach(() => vi.restoreAllMocks())
+
+async function searchAndUse(title: string) {
+  vi.spyOn(api, 'get').mockResolvedValue([song, lyrics])
+  const onpick = vi.fn()
+  const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick, tab: 'song'})
+  await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
+  await fireEvent.submit(container.querySelector('form')!)
+  expect(api.get).toHaveBeenCalledWith('songs?q=let%20it%20be')
+  await findByText('lyrics only')
+  expect(container.querySelector('.badge')!.textContent).to.eq('chords')
+  await fireEvent.click(getByText(title))
+  await fireEvent.submit(container.querySelectorAll('form')[1])
+  return onpick
+}
 
 it('picks a progression', async () => {
   const onpick = vi.fn()
@@ -29,4 +49,19 @@ it('links to chord sites for the searched song', async () => {
   await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
   const links = [...container.querySelectorAll('a')].map(a => a.href)
   expect(links[0]).to.eq('https://www.ultimate-guitar.com/search.php?search_type=title&value=let%20it%20be')
+})
+
+it('saves confirmed song with chords to own DB', async () => {
+  const saved = {...song, id: 'saved'}
+  vi.spyOn(api, 'post').mockResolvedValue(saved)
+  const onpick = await searchAndUse('Let It Be')
+  expect(api.post).toHaveBeenCalledWith('songs', song)
+  await vi.waitFor(() => expect(onpick).toHaveBeenCalledWith(saved))
+})
+
+it('does not save lyrics without chords', async () => {
+  vi.spyOn(api, 'post')
+  const onpick = await searchAndUse('Lyrics')
+  expect(api.post).not.toHaveBeenCalled()
+  await vi.waitFor(() => expect(onpick).toHaveBeenCalledWith(lyrics))
 })
