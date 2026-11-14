@@ -7,7 +7,7 @@
   import FormField from 'src/forms/FormField.svelte'
   import SelectField from 'src/forms/SelectField.svelte'
   import TextAreaField from 'src/forms/TextAreaField.svelte'
-  import {isMinorProgression, keyOptions, progressions, progressionSheet, toChordPro} from 'src/music/chords'
+  import {isValidProgression, keyOptions, progressions, progressionSong, toChordPro} from 'src/music/chords'
 
   export let actionLabel: string
   export let onpick: (song: Song) => void
@@ -18,6 +18,7 @@
   export let song = {} as Song
   let query = ''
   let results: Lyrics[]|undefined
+  let custom = ''
 
   const chordSites = {
     'Ultimate Guitar': 'https://www.ultimate-guitar.com/search.php?search_type=title&value=',
@@ -27,10 +28,10 @@
 
   $: chordQuery = [song.title, song.artist].filter(s => s).join(' ') || query
 
-  function progression(name: keyof typeof progressions, root: string) {
-    const numerals = progressions[name]
-    const key = root + (isMinorProgression(numerals) ? 'm' : '')
-    return {title: t.progressions[name], sheet: progressionSheet(numerals, key), key}
+  $: customSong = isValidProgression(custom) ? progressionSong(custom, custom, root) : undefined
+
+  function preview(song: Song) {
+    return song.sheet.replace(/[[\]]/g, '').replace(/\n/g, ' ')
   }
 
   async function search() {
@@ -52,13 +53,19 @@
 {#if tab == 'progressions'}
   <div class="spaced">
     <SelectField label={t.song.key} bind:value={root} options={keyOptions()} class="w-32"/>
+    <Form submit={() => customSong && onpick(customSong)} class="flex gap-2 items-end">
+      <FormField label={t.song.ownProgression} bind:value={custom} placeholder="C G Am F  /  I V vi IV" class="flex-1"
+                 validator={v => !v || isValidProgression(v) ? '' : t.song.invalidProgression}/>
+      <Button type="submit" label={actionLabel}/>
+    </Form>
+    {#if customSong}<p class="text-sm text-gray-500 font-mono -mt-2">{preview(customSong)}</p>{/if}
     <ul class="divide-y divide-gray-200">
       {#each Object.keys(progressions) as (keyof typeof progressions)[] as name}
-        {@const p = progression(name, root)}
+        {@const p = progressionSong(t.progressions[name], progressions[name], root)}
         <li class="flex items-center gap-3 py-2">
           <div class="flex-1">
             <div class="font-medium">{p.title}</div>
-            <div class="text-sm text-gray-500 font-mono">{p.sheet.replace(/[[\]]/g, '').replace(/\n/g, ' ')}</div>
+            <div class="text-sm text-gray-500 font-mono">{preview(p)}</div>
           </div>
           <Button label={actionLabel} class="outlined" onclick={() => onpick(p)}/>
         </li>

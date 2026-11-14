@@ -5,13 +5,22 @@ it('picks a progression', async () => {
   const onpick = vi.fn()
   const {container, getAllByText} = render(SongPicker, {actionLabel: 'Pick', onpick})
   expect(container.textContent).to.contain('C G Am F')
-  await fireEvent.click(getAllByText('Pick')[0])
+  await fireEvent.click(getAllByText('Pick')[1])
   expect(onpick).toHaveBeenCalledWith({title: 'Pop', sheet: '[C] [G] [Am] [F]', key: 'C'})
 
   await fireEvent.change(container.querySelector('select')!, {target: {value: 'G'}})
   expect(container.textContent).to.contain('G D Em C')
-  await fireEvent.click(getAllByText('Pick')[0])
+  await fireEvent.click(getAllByText('Pick')[1])
   expect(onpick).toHaveBeenLastCalledWith({title: 'Pop', sheet: '[G] [D] [Em] [C]', key: 'G'})
+})
+
+it('picks own progression', async () => {
+  const onpick = vi.fn()
+  const {container, getAllByText} = render(SongPicker, {actionLabel: 'Pick', onpick})
+  await fireEvent.input(container.querySelector('input')!, {target: {value: 'I V vi IV'}})
+  expect(container.textContent).to.contain('C G Am F')
+  await fireEvent.click(getAllByText('Pick')[0])
+  expect(onpick).toHaveBeenCalledWith({title: 'I V vi IV', sheet: '[C] [G] [Am] [F]', key: 'C'})
 })
 
 it('links to chord sites for the searched song', async () => {

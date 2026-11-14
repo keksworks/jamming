@@ -37,6 +37,8 @@
     "artist": "Artist",
     "key": "Key",
     "detectKey": "From first chord",
+    "ownProgression": "Your own progression",
+    "invalidProgression": "Use chords like C G Am F, or numerals like I V vi IV",
     "sheet": "Chords & lyrics",
     "sheetHelp": "Put chords in brackets: [Am]Hello [F]world, or paste chords above lyrics from any chord site",
     "findChords": "Find chords to copy & paste here:",

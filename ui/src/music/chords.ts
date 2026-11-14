@@ -1,3 +1,5 @@
+import type {Song} from 'src/api/types'
+
 const sharps = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const flats = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
 export const keys = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
@@ -100,9 +102,15 @@ export function toChordPro(text: string) {
 
 const degrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
 const degreeSemitones = [0, 2, 4, 5, 7, 9, 11]
+const numeralRegex = /^([b#]?)(VII|VI|V|IV|III|II|I|vii|vi|v|iv|iii|ii|i)(.*)$/
+
+function isNumeral(s: string) {
+  const m = s.match(numeralRegex)
+  return !!m && isChord('C' + m[3])
+}
 
 export function numeralToChord(numeral: string, key: string) {
-  const [, accidental, degree, suffix] = numeral.match(/^([b#]?)([ivIV]+)(.*)$/)!
+  const [, accidental, degree, suffix] = numeral.match(numeralRegex)!
   const semitones = degreeSemitones[degrees.indexOf(degree.toUpperCase())] + (accidental == 'b' ? -1 : accidental == '#' ? 1 : 0)
   const minor = degree == degree.toLowerCase() && !suffix.startsWith('dim') && !suffix.startsWith('ø')
   return transposeNote(keyRoot(key), semitones, usesFlats(key) || accidental == 'b') + (minor ? 'm' : '') + suffix
@@ -120,11 +128,28 @@ export const progressions = {
   mixolydian: 'I bVII IV I'
 }
 
-export function isMinorProgression(numerals: string) {
-  return numerals.startsWith('i')
+/** Chords or roman numerals separated by spaces, commas, dashes or bars */
+export function progressionChords(progression: string) {
+  return progression.split(/[\s,|–—]+/).filter(c => c && c != '-')
 }
 
-/** Builds a sheet with 4 chords per line */
-export function progressionSheet(numerals: string, key: string) {
-  return numerals.split(' ').map((n, i) => (i && i % 4 == 0 ? '\n' : '') + `[${numeralToChord(n, key)}]`).join(' ').replace(/ \n/g, '\n')
+export function isValidProgression(progression: string) {
+  const chords = progressionChords(progression)
+  return chords.length > 0 && chords.every(c => isChord(c) || isNumeral(c))
+}
+
+export function isMinorProgression(progression: string) {
+  return /^i(?![iv])/.test(progressionChords(progression)[0] ?? '')
+}
+
+/** Builds a sheet with 4 chords per line, roman numerals are converted to chords in the key */
+export function progressionSheet(progression: string, key: string) {
+  return progressionChords(progression).map((c, i) => (i && i % 4 == 0 ? '\n' : '') + `[${isChord(c) ? c : numeralToChord(c, key)}]`).join(' ').replace(/ \n/g, '\n')
+}
+
+/** Key is detected from the first chord, unless roman numerals are used, which are played in the key of root */
+export function progressionSong(title: string, progression: string, root: string) {
+  const usesNumerals = !progressionChords(progression).every(isChord)
+  const key = usesNumerals ? root + (isMinorProgression(progression) ? 'm' : '') : undefined
+  return {title, sheet: progressionSheet(progression, key ?? root), key} as Song
 }

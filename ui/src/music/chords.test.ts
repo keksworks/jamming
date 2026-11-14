@@ -1,10 +1,13 @@
 import {
   detectKey,
   isChord,
+  isMinorProgression,
+  isValidProgression,
   numeralToChord,
   parseSheet,
   progressions,
   progressionSheet,
+  progressionSong,
   semitonesBetween,
   toChordPro,
   transposeChord,
@@ -63,4 +66,22 @@ it('progressions', () => {
   expect(progressionSheet(progressions.pop, 'C')).to.eq('[C] [G] [Am] [F]')
   expect(progressionSheet(progressions.andalusian, 'Am')).to.eq('[Am] [G] [F] [E]')
   expect(progressionSheet(progressions.canon, 'D')).to.eq('[D] [A] [Bm] [F#m]\n[G] [D] [G] [A]')
+})
+
+it('custom progressions of chords or numerals', () => {
+  expect(isValidProgression('C G Am F')).to.be.true
+  expect(isValidProgression('I–V–vi–IV')).to.be.true
+  expect(isValidProgression('ii7, V7 | Imaj7')).to.be.true
+  expect(isValidProgression('C X')).to.be.false
+  expect(isValidProgression('IIII')).to.be.false
+  expect(isValidProgression(' ')).to.be.false
+  expect(progressionSheet('I - V7, bVII', 'G')).to.eq('[G] [D7] [F]')
+  expect(progressionSong('Mine', 'Am F C G', 'D')).to.deep.eq({title: 'Mine', sheet: '[Am] [F] [C] [G]', key: undefined})
+  expect(progressionSong('Mine', 'i iv v', 'E')).to.deep.eq({title: 'Mine', sheet: '[Em] [Am] [Bm]', key: 'Em'})
+})
+
+it('isMinorProgression', () => {
+  expect(isMinorProgression(progressions.andalusian)).to.be.true
+  expect(isMinorProgression(progressions.jazz)).to.be.false
+  expect(isMinorProgression('iv I')).to.be.false
 })
