@@ -58,7 +58,7 @@
 
     {#if pos}
       <div class="flex items-baseline gap-6">
-        <span class="text-7xl font-extrabold tracking-tight gradient-text drop-shadow-sm">{countIn ? -pos.beat : sheet.chords[pos.index]}</span>
+        <span class="text-7xl font-black tracking-tight text-primary-600 dark:text-primary-400">{countIn ? -pos.beat : sheet.chords[pos.index]}</span>
         {#if countIn}
           <span class="text-gray-500">{t.jam.getReady}</span>
         {:else}

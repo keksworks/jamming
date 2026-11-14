@@ -48,10 +48,6 @@
 
   body {
     @apply text-gray-900 bg-canvas min-h-screen;
-    background-image:
-      radial-gradient(50rem 25rem at 0% -10%, color-mix(in oklab, var(--color-primary-500) 18%, transparent), transparent),
-      radial-gradient(40rem 25rem at 100% 0%, color-mix(in oklab, var(--color-accent-500) 12%, transparent), transparent);
-    background-attachment: fixed;
   }
 
   a {
@@ -103,41 +99,35 @@
   --color-danger-950: #450a0a;
   --color-danger: #ef4444;
 
-  --color-primary-50: #f5f3ff;
-  --color-primary-100: #ede9fe;
-  --color-primary-200: #ddd6fe;
-  --color-primary-300: #c4b5fd;
-  --color-primary-400: #a78bfa;
-  --color-primary-500: #8b5cf6;
-  --color-primary-600: #7c3aed;
-  --color-primary-700: #6d28d9;
-  --color-primary-800: #5b21b6;
-  --color-primary-900: #4c1d95;
-  --color-primary-950: #2e1065;
-  --color-primary: #8b5cf6;
-
-  --color-accent-300: #f0abfc;
-  --color-accent-400: #e879f9;
-  --color-accent-500: #d946ef;
-  --color-accent-600: #c026d3;
-  --color-accent: #d946ef;
+  --color-primary-50: #fff5f0;
+  --color-primary-100: #ffe8dc;
+  --color-primary-200: #ffcdb6;
+  --color-primary-300: #ffa883;
+  --color-primary-400: #fd7a4b;
+  --color-primary-500: #ef4f1f;
+  --color-primary-600: #cf3510;
+  --color-primary-700: #ab2a0e;
+  --color-primary-800: #8a2512;
+  --color-primary-900: #702213;
+  --color-primary-950: #3d0e06;
+  --color-primary: #ef4f1f;
 
   /* page background & cards/dialogs, swapped in dark mode below */
-  --color-canvas: #f8f7fb;
+  --color-canvas: #f7f5f2;
   --color-surface: #ffffff;
 
-  /* violet-tinted grays, inverted in dark mode below, so that existing gray utilities adapt automatically */
-  --color-gray-50: #f8f7fb;
-  --color-gray-100: #f1f0f6;
-  --color-gray-200: #e5e3ed;
-  --color-gray-300: #d2cfdd;
-  --color-gray-400: #a19cb3;
-  --color-gray-500: #767089;
-  --color-gray-600: #5a5470;
-  --color-gray-700: #46405a;
-  --color-gray-800: #2e2a3d;
-  --color-gray-900: #1d1a28;
-  --color-gray-950: #110f18;
+  /* warm grays, inverted in dark mode below, so that existing gray utilities adapt automatically */
+  --color-gray-50: #fafaf9;
+  --color-gray-100: #f5f5f4;
+  --color-gray-200: #e7e5e4;
+  --color-gray-300: #d6d3d1;
+  --color-gray-400: #a8a29e;
+  --color-gray-500: #78716c;
+  --color-gray-600: #57534e;
+  --color-gray-700: #44403c;
+  --color-gray-800: #292524;
+  --color-gray-900: #1c1917;
+  --color-gray-950: #0c0a09;
 
   --color-secondary-50: #f9fafb;
   --color-secondary-100: #f3f4f6;
@@ -155,32 +145,24 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-canvas: #0d0b14;
-    --color-surface: #17151f;
-    --color-gray-50: #15131d;
-    --color-gray-100: #1e1b29;
-    --color-gray-200: #2a2638;
-    --color-gray-300: #3a3549;
-    --color-gray-400: #5f5a73;
-    --color-gray-500: #8d889e;
-    --color-gray-600: #aca8bb;
-    --color-gray-700: #cac7d5;
-    --color-gray-800: #e1dfe9;
-    --color-gray-900: #efeef4;
-    --color-gray-950: #f8f7fb;
+    --color-canvas: #141210;
+    --color-surface: #1c1917;
+    --color-gray-50: #1f1c19;
+    --color-gray-100: #26221f;
+    --color-gray-200: #322d29;
+    --color-gray-300: #433d38;
+    --color-gray-400: #665e57;
+    --color-gray-500: #8f877f;
+    --color-gray-600: #b0a9a2;
+    --color-gray-700: #cdc8c2;
+    --color-gray-800: #e3dfdb;
+    --color-gray-900: #f1eeeb;
+    --color-gray-950: #faf8f6;
   }
 }
 
-@utility gradient {
-  @apply bg-linear-to-r from-primary-600 to-accent-500;
-}
-
-@utility gradient-text {
-  @apply bg-linear-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent;
-}
-
 @utility card {
-  @apply bg-surface rounded-2xl shadow-sm ring-1 ring-gray-200 dark:shadow-none;
+  @apply bg-surface rounded-lg border border-gray-200;
 }
 
 @utility text-muted {
@@ -201,12 +183,12 @@ html.loading {
   }
 
   .btn {
-    @apply inline-flex items-center justify-center min-w-28 px-4 py-2 rounded-full font-medium text-sm cursor-pointer transition
+    @apply inline-flex items-center justify-center min-w-28 px-4 py-2 rounded-md font-semibold text-sm cursor-pointer transition-colors
       disabled:opacity-50 disabled:cursor-default;
   }
 
   .btn.default {
-    @apply gradient text-white shadow-md shadow-primary-600/25 hover:brightness-110 hover:shadow-lg hover:shadow-accent-500/30;
+    @apply bg-primary-600 text-white hover:bg-primary-700;
   }
 
   .btn.sm {
@@ -230,7 +212,7 @@ html.loading {
   }
 
   .badge {
-    @apply inline-flex items-center gap-1 bg-primary-100 text-primary-800 dark:bg-primary-900/60 dark:text-primary-200 text-sm rounded-full px-2 py-0.5 shrink-0;
+    @apply inline-flex items-center gap-1 bg-primary-100 text-primary-800 dark:bg-primary-900/60 dark:text-primary-200 text-sm rounded px-2 py-0.5 shrink-0;
   }
 }
 

@@ -21,10 +21,10 @@
 
 <Toasts/>
 
-<menu class="sticky top-0 z-30 flex gap-4 px-4 py-3 items-center bg-surface/70 backdrop-blur-md border-b border-gray-200">
-  <Link to="/" class="flex items-center gap-2 text-xl font-extrabold tracking-tight">
-    <span class="gradient text-white rounded-xl p-1.5 flex shadow-md shadow-primary-600/30"><Icon name="music"/></span>
-    <span class="gradient-text">{t.title}</span>
+<menu class="sticky top-0 z-30 flex gap-4 px-4 py-3 items-center bg-surface border-b border-gray-200">
+  <Link to="/" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-gray-950 hover:text-gray-950 dark:text-gray-950 dark:hover:text-gray-950">
+    <span class="bg-primary-600 text-white rounded-md p-1.5 flex"><Icon name="music"/></span>
+    {t.title}
   </Link>
   <span class="ml-auto">
     {#if $user}

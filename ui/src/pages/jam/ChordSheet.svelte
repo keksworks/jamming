@@ -16,7 +16,7 @@
         {#if part.label}<span class="font-sans font-semibold text-gray-500 mt-3 mr-2">{part.label}</span>{/if}
         <span class="inline-flex flex-col whitespace-pre">
           {#if part.chord}
-            <b class="pr-2 rounded transition-colors {part.index == current ? 'current gradient text-white px-1.5 shadow-md shadow-accent-500/40' : 'text-primary-700 dark:text-primary-300'}">{part.chord}</b>
+            <b class="pr-2 rounded-sm {part.index == current ? 'current bg-primary-600 text-white px-1' : 'text-primary-700 dark:text-primary-300'}">{part.chord}</b>
           {/if}
           <span>{part.text || ' '}</span>
         </span>

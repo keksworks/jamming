@@ -48,9 +48,9 @@
 {#if show}
   <div bind:this={modal} class="modal transition-opacity fixed z-40 inset-0 overflow-y-auto" transition:fade={{duration: flyParams.duration}}>
     <div class="flex items-center justify-center min-h-screen p-4 md:pb-20 text-center">
-      <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+      <div class="fixed inset-0 bg-black/50 transition-opacity"></div>
 
-      <div class="w-full {wide ? 'max-w-7xl': 'max-w-xl'} relative inline-block bg-surface rounded-2xl ring-1 ring-gray-200 p-6 md:p-10 text-left overflow-hidden shadow-xl transform transition-all align-middle"
+      <div class="w-full {wide ? 'max-w-7xl': 'max-w-xl'} relative inline-block bg-surface rounded-lg border border-gray-200 p-6 md:p-10 text-left overflow-hidden shadow-xl transform transition-all align-middle"
            role="dialog" transition:fly={flyParams}>
         {#if closable}<div class="block absolute -top-2 -right-2 pt-4 md:pt-8 pr-4 md:pr-8 z-40">
           <button type="button" title={t.general.close} onclick={close} class="bg-surface flex items-center justify-center text-gray-400 hover:text-gray-500 h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500">

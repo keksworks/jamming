@@ -39,7 +39,7 @@
   {#if beat !== undefined}
     <span class="flex gap-1.5">
       {#each Array(playback.beatsPerChord) as _, i}
-        <span class="w-3.5 h-3.5 rounded-full transition {beat < 0 ? 'bg-warning-400' : i == beat ? 'gradient scale-125 shadow-md shadow-accent-500/50' : 'bg-gray-200'}"></span>
+        <span class="w-3 h-5 rounded-sm {beat < 0 ? 'bg-warning-400' : i == beat ? 'bg-primary-600' : 'bg-gray-200'}"></span>
       {/each}
     </span>
   {/if}
