@@ -2,14 +2,15 @@ package jams
 
 import ch.tutteli.atrium.api.fluent.en_GB.toEqual
 import ch.tutteli.atrium.api.verbs.expect
+import db.BaseMocks
 import db.TestData.member
 import db.TestData.song
 import db.TestData.suggestion
 import org.junit.jupiter.api.Test
 
-/** JamHub is in-memory, so no need to mock it */
-class JamRoutesTest {
-  val routes = JamRoutes(JamHub())
+/** JamHub is mostly in-memory, so no need to mock it */
+class JamRoutesTest: BaseMocks() {
+  val routes = JamRoutes(JamHub(jamRepository))
   val jam = routes.create()
 
   @Test fun `play song, change key & suggest`() {

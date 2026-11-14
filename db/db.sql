@@ -8,3 +8,4 @@
 --include change_history.sql
 --include users.sql
 --include songs.sql
+--include jams.sql

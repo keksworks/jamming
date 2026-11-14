@@ -4,6 +4,7 @@ import db.TestData.user
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import jams.JamRepository
 import klite.Config
 import klite.DependencyInjectingRegistry
 import klite.HttpExchange
@@ -24,6 +25,7 @@ abstract class BaseMocks {
     val emailSender = mock<EmailSender>(relaxed = true)
     val songRepository = mock<SongRepository>()
     val lrcLibClient = mock<LrcLibClient>()
+    val jamRepository = mock<JamRepository>(relaxed = true)
 
     inline fun <reified T: Any> create() = registry.create(T::class)
 
@@ -45,5 +47,6 @@ abstract class BaseMocks {
       every { save(any()) } returns 1
     }
     every { songRepository.save(any()) } returns 1
+    every { jamRepository.get(any()) } returns null
   }
 }
