@@ -40,18 +40,17 @@
 </script>
 
 <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
-  <div class="flex flex-wrap items-center gap-3">
-  <Button icon={playback.startedAt ? 'player-stop' : 'player-play'} label={playback.startedAt ? t.jam.stop : t.jam.play} size="lg" onclick={togglePlay}/>
+  <div class="flex items-center gap-3">
+    <Button icon={playback.startedAt ? 'player-stop' : 'player-play'} label={playback.startedAt ? t.jam.stop : t.jam.play} size="md:lg" onclick={togglePlay}/>
 
-  <span class="flex items-center gap-1">
-    <Button icon="minus" class="outlined" onclick={() => tempo(-5)}/>
-    <span class="w-16 text-center"><b>{playback.bpm}</b> {t.jam.bpm}</span>
-    <Button icon="plus" class="outlined" onclick={() => tempo(5)}/>
-  </span>
+    <span class="flex items-center gap-1">
+      <Button icon="minus" class="outlined" onclick={() => tempo(-5)}/>
+      <span class="w-12 md:w-16 text-center"><b>{playback.bpm}</b> <small class="max-sm:text-xs">{t.jam.bpm}</small></span>
+      <Button icon="plus" class="outlined" onclick={() => tempo(5)}/>
+    </span>
 
-  <SelectField value={playback.beatsPerChord} options={{2: '2', 3: '3', 4: '4', 6: '6', 8: '8'}} title={t.jam.beatsPerChord}
-               onchange={(e: Event) => changePlayback({...playback, beatsPerChord: +(e.target as HTMLSelectElement).value})}/>
-
+    <SelectField value={playback.beatsPerChord} options={{2: '2', 3: '3', 4: '4', 6: '6', 8: '8'}} title={t.jam.beatsPerChord}
+                 onchange={(e: Event) => changePlayback({...playback, beatsPerChord: +(e.target as HTMLSelectElement).value})}/>
   </div>
 
   <div class="flex items-center gap-2 sm:ml-auto">
