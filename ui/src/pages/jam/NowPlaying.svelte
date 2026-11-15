@@ -64,16 +64,16 @@
     <PlaybackControls playback={jam.playback} {beat} total={pos?.total} chord={pos && !countIn ? sheet.chords[pos.index] : undefined}/>
 
     {#if pos}
-      <div class="flex items-baseline gap-6">
-        <span class="text-7xl font-black tracking-tight text-primary-600 dark:text-primary-400">{countIn ? -pos.beat : sheet.chords[pos.index]}</span>
+      <div class="sticky top-14 z-20 bg-surface py-2 flex items-baseline gap-3 sm:gap-6">
+        <span class="shrink-0 text-5xl sm:text-7xl font-black tracking-tight text-primary-600 dark:text-primary-400">{countIn ? -pos.beat : sheet.chords[pos.index]}</span>
         {#if countIn}
-          <span class="text-gray-500">{t.jam.getReady}</span>
+          <span class="truncate text-gray-500">{t.jam.getReady}</span>
         {:else}
-          <span class="text-2xl text-gray-400">{t.jam.next}: {sheet.chords[(pos.index + 1) % sheet.chords.length]}</span>
+          <span class="truncate text-lg sm:text-2xl text-gray-400">{t.jam.next}: {sheet.chords[(pos.index + 1) % sheet.chords.length]}</span>
         {/if}
-        <span class="beats flex gap-1.5 ml-auto self-center">
+        <span class="beats shrink-0 flex gap-1 sm:gap-1.5 ml-auto self-center">
           {#each Array(jam.playback.beatsPerChord) as _, i}
-            <span class="w-3 h-5 rounded-sm {countIn ? 'bg-warning-400' : i == pos.beat ? 'bg-primary-600' : 'bg-gray-200'}"></span>
+            <span class="w-2 sm:w-3 h-5 rounded-sm {countIn ? 'bg-warning-400' : i == pos.beat ? 'bg-primary-600' : 'bg-gray-200'}"></span>
           {/each}
         </span>
       </div>

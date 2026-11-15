@@ -39,7 +39,7 @@
         <span class="inline-flex flex-col whitespace-pre-wrap">
           {#if part.chord}
             <span class="group relative self-start">
-              <button type="button" class="chord font-bold text-left pr-2 rounded-sm cursor-pointer {part.index == current ? 'current bg-primary-600 text-white px-1' : 'text-primary-700 dark:text-primary-300'}"
+              <button type="button" class="chord font-bold text-left pr-2 rounded-sm cursor-pointer scroll-mt-40 {part.index == current ? 'current bg-primary-600 text-white px-1' : 'text-primary-700 dark:text-primary-300'}"
                       onclick={(e: MouseEvent) => toggle(e, part.chord!)}>{part.chord}</button>
               <button type="button" title={t.jam.playChord} onclick={() => playChord(part.chord!, 'guitar')}
                       class="chord-play absolute z-10 top-1/2 -translate-y-1/2 -right-2 flex p-0.5 rounded-sm text-xs bg-surface text-primary-600 border border-gray-200 cursor-pointer
