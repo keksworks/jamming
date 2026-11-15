@@ -119,7 +119,7 @@
       <ul class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
         {#each results as found (found.id)}
           <li><button type="button" class="w-full flex items-center gap-2 py-2 hover:bg-gray-50" onclick={() => use(found)}>
-            <b>{found.title}</b> <span class="text-gray-500 flex-1">{found.artist ?? ''}</span>
+            <b class="truncate">{found.title}</b> <span class="text-gray-500 flex-1 truncate text-left">{found.artist ?? ''}</span>
             {#if found.url}<span class="text-xs text-muted">{source(found.url)}</span>{/if}
             {#if found.url || hasChords(found.sheet)}<span class="badge">{t.song.withChords}</span>{:else}<span class="text-sm text-muted">{t.song.lyricsOnly}</span>{/if}
           </button></li>

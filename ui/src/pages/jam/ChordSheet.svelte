@@ -36,7 +36,7 @@
     <div class="flex flex-wrap items-end min-h-5">
       {#each line as part}
         {#if part.label}<span class="font-sans font-semibold text-gray-500 mt-3 mr-2">{part.label}</span>{/if}
-        <span class="inline-flex flex-col whitespace-pre">
+        <span class="inline-flex flex-col whitespace-pre-wrap">
           {#if part.chord}
             <span class="group relative self-start">
               <button type="button" class="chord font-bold text-left pr-2 rounded-sm cursor-pointer {part.index == current ? 'current bg-primary-600 text-white px-1' : 'text-primary-700 dark:text-primary-300'}"
