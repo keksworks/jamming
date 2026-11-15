@@ -14,7 +14,8 @@
       "button": "Add to home screen",
       "ios": "Tap {share} Share in Safari, then “Add to Home Screen”.",
       "android": "Open the browser menu ⋮ and choose “Add to Home screen” or “Install app”."
-    }
+    },
+    "openSource": "Jamming.me is free and open-source, see the code on"
   },
   "jam": {
     "notFound": "Jam not found, it may have ended",

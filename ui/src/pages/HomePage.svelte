@@ -7,6 +7,7 @@
   import {createJam, me, setMyName} from 'src/stores/jam'
   import StrumStrings from './StrumStrings.svelte'
   import InstallApp from './InstallApp.svelte'
+  import Icon from 'src/icons/Icon.svelte'
 
   let name = me.name
   let code = ''
@@ -38,4 +39,9 @@
   </Form>
 
   <InstallApp/>
+
+  <p class="text-center text-sm text-gray-500 py-4">
+    {t.home.openSource}
+    <a href="https://github.com/keksworks/jamming" target="_blank" rel="noopener" class="github inline-flex items-center gap-1"><Icon name="brand-github"/>GitHub</a>
+  </p>
 </div>
