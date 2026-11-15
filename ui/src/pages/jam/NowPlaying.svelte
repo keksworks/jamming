@@ -42,7 +42,7 @@
   }
 </script>
 
-<section class="card spaced p-4 sm:p-6">
+<section class="card spaced p-4 max-sm:-mx-4 max-sm:rounded-none sm:p-6">
   {#if jam.song}
     <div class="flex flex-wrap items-end gap-3">
       <div class="flex-1 min-w-40">

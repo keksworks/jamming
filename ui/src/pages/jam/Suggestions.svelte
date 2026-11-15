@@ -22,7 +22,7 @@
   }
 </script>
 
-<section class="card spaced p-4 sm:p-6">
+<section class="card spaced max-sm:-mx-4 max-sm:rounded-none p-4 sm:p-6">
   <h5>{t.suggestions.title}</h5>
   <ul class="divide-y divide-gray-200">
     {#each suggestions as s (s.id)}

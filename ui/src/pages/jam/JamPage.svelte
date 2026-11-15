@@ -54,7 +54,7 @@
   <p class="text-center pt-10">{t.jam.notFound}</p>
   <p class="text-center pt-4"><Link to="/" label={t.home.start}/></p>
 {:else if !joined}
-  <Form submit={join} class="card max-w-md mx-auto spaced p-6 mt-6 sm:mt-12">
+  <Form submit={join} class="card max-w-md mx-auto spaced max-sm:-m-4 p-6 mt-6 sm:mt-12">
     <FormField label={t.home.yourName} bind:value={name} maxlength={30} autocomplete="nickname" class="lg"/>
     <Button type="submit" label={t.home.join} size="lg" class="default w-full"/>
   </Form>
