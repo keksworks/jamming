@@ -45,7 +45,7 @@
     "chordSound": {
       "title": "Play chords along",
       "options": {
-        "none": "None",
+        "none": "No sound",
         "guitar": "Guitar",
         "piano": "Piano"
       }
