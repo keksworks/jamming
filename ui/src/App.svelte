@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-  <title>{t.title}</title>
+  <title>{t.title} – {t.home.tagline}</title>
 </svelte:head>
 
 <Toasts/>

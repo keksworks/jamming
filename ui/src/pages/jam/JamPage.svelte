@@ -50,6 +50,10 @@
   onDestroy(() => leave.forEach(f => f()))
 </script>
 
+<svelte:head>
+  <meta name="robots" content="noindex">
+</svelte:head>
+
 {#if notFound}
   <p class="text-center pt-10">{t.jam.notFound}</p>
   <p class="text-center pt-4"><Link to="/" label={t.home.start}/></p>
