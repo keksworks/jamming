@@ -10,7 +10,7 @@ afterEach(() => vi.restoreAllMocks())
 async function searchAndUse(title: string) {
   vi.spyOn(api, 'get').mockResolvedValue([song, {...lyrics}])
   const onpick = vi.fn()
-  const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick, tab: 'song'})
+  const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick, tab: 'songs'})
   await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
   await fireEvent.submit(container.querySelector('form')!)
   expect(api.get).toHaveBeenCalledWith('songs?q=let%20it%20be')
@@ -44,8 +44,9 @@ it('picks own progression', async () => {
 
 it('links to chord sites for the searched song', async () => {
   const {container, getByText} = render(SongPicker, {actionLabel: 'Pick', onpick: vi.fn()})
-  await fireEvent.click(getByText('Song'))
+  await fireEvent.click(getByText('Songs'))
   await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
+  await fireEvent.click(getByText('Manual entry'))
   const links = [...container.querySelectorAll('a')].map(a => a.href)
   expect(links[0]).to.eq('https://www.ultimate-guitar.com/search.php?search_type=title&value=let%20it%20be')
 })
@@ -71,7 +72,7 @@ it('loads chords from Ultimate Guitar when picked, converted to inline chords', 
     path.startsWith('songs?') ? [found] : {...found, sheet: 'C    G\nWhen I find'})
   vi.spyOn(api, 'post').mockImplementation(async (_, song) => song)
   const onpick = vi.fn()
-  const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick, tab: 'song'})
+  const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick, tab: 'songs'})
   await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
   await fireEvent.submit(container.querySelector('form')!)
   expect((await findByText('ultimate-guitar.com')).textContent).to.eq('ultimate-guitar.com')
@@ -82,7 +83,7 @@ it('loads chords from Ultimate Guitar when picked, converted to inline chords', 
 
 it('suggests own songs after typing stops, without searching other sources', async () => {
   const get = vi.spyOn(api, 'get').mockResolvedValue([song])
-  const {container, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick: vi.fn(), tab: 'song'})
+  const {container, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick: vi.fn(), tab: 'songs'})
   await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let'}})
   expect(get).not.toHaveBeenCalled()
   await findByText(song.title)

@@ -68,7 +68,7 @@
   {#if shared}
     <Modal bind:show={showShared} title={t.song.shared} wide>
       {#if !shared.sheet}<p class="mb-4 text-sm text-warning-700 dark:text-warning-300">{t.song.sharedLinkOnly}</p>{/if}
-      <SongPicker song={shared} tab="song" actionLabel={$jam.song ? t.song.suggest : t.song.playNow} onpick={pickShared}/>
+      <SongPicker song={shared} tab="manual" actionLabel={$jam.song ? t.song.suggest : t.song.playNow} onpick={pickShared}/>
     </Modal>
   {/if}
 {:else}

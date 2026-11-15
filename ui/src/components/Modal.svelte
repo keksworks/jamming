@@ -1,18 +1,39 @@
 <script context="module" lang="ts">
   const openModals: (() => void)[] = []
 
+  /** Whether a history entry was pushed for open modals, so that browser back closes them */
+  let historyPushed = false
+
   if (typeof window !== 'undefined') {
     window.addEventListener('keyup', (e: KeyboardEvent) => {
       if (e.code === 'Escape') openModals.at(-1)?.()
     })
+    window.addEventListener('popstate', () => {
+      if (!historyPushed) return
+      historyPushed = false
+      openModals.at(-1)?.()
+      setTimeout(syncHistory)
+    })
   }
 
-  /** Registers a close handler so Escape closes the top-most open modal/dialog */
+  /** Keeps a single history entry while any modal is open */
+  function syncHistory() {
+    if (openModals.length && !historyPushed) {
+      history.pushState({modal: true}, '')
+      historyPushed = true
+    } else if (!openModals.length && historyPushed) {
+      historyPushed = false
+      if (history.state?.modal) history.back()
+    }
+  }
+
+  /** Registers a close handler so Escape or browser back closes the top-most open modal/dialog */
   export function trackModal(close: () => void, open: boolean) {
     const i = openModals.indexOf(close)
     if (open && i < 0) openModals.push(close)
     else if (!open && i >= 0) openModals.splice(i, 1)
     document.body.classList.toggle('modal-open', openModals.length > 0)
+    syncHistory()
   }
 </script>
 
@@ -50,7 +71,7 @@
     <div class="flex items-center justify-center min-h-screen sm:p-4 md:pb-20 text-center">
       <div class="fixed inset-0 bg-black/50 transition-opacity"></div>
 
-      <div class="w-full {wide ? 'max-w-7xl': 'max-w-xl'} relative inline-block bg-surface sm:rounded-lg border-y sm:border border-gray-200 p-4 sm:p-6 md:p-10 text-left overflow-hidden shadow-xl transform transition-all align-middle"
+      <div class="w-full {wide ? 'max-w-7xl min-h-dvh sm:min-h-0' : 'max-w-xl'} relative inline-block bg-surface sm:rounded-lg border-y sm:border border-gray-200 p-4 sm:p-6 md:p-10 text-left overflow-hidden shadow-xl transform transition-all align-middle"
            role="dialog" transition:fly={flyParams}>
         {#if closable}<div class="block absolute -top-2 -right-2 pt-4 md:pt-8 pr-4 md:pr-8 z-40">
           <button type="button" title={t.general.close} onclick={close} class="bg-surface flex items-center justify-center text-gray-400 hover:text-gray-500 h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500">

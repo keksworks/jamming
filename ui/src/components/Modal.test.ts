@@ -3,6 +3,7 @@ import Modal from './Modal.svelte'
 
 afterEach(() => {
   cleanup()
+  vi.restoreAllMocks()
 })
 
 it('Modal is shown', async () => {
@@ -116,4 +117,27 @@ it('does not close unclosable modal on Escape', async () => {
   await fireEvent.keyUp(window, {code: 'Escape'})
   expect(document.body.textContent).not.to.contain('Closable Modal')
   expect(document.body.classList.contains('modal-open')).to.be.false
+})
+
+it('closes only the top modal on browser back', async () => {
+  render(Modal, {title: 'Modal 1', show: true, flyParams: {duration: 0}})
+  render(Modal, {title: 'Modal 2', show: true, flyParams: {duration: 0}})
+  expect(history.state).to.deep.eq({modal: true})
+
+  history.back()
+  await vi.waitFor(() => expect(document.body.textContent).not.to.contain('Modal 2'))
+  expect(document.body.textContent).to.contain('Modal 1')
+  await vi.waitFor(() => expect(history.state).to.deep.eq({modal: true}))
+
+  history.back()
+  await vi.waitFor(() => expect(document.body.textContent).not.to.contain('Modal 1'))
+  expect(document.body.classList.contains('modal-open')).to.be.false
+})
+
+it('removes its history entry when closed otherwise', async () => {
+  render(Modal, {title: 'Modal 1', show: true, flyParams: {duration: 0}})
+  expect(history.state).to.deep.eq({modal: true})
+  const back = vi.spyOn(history, 'back')
+  await fireEvent.keyUp(window, {code: 'Escape'})
+  expect(back).toHaveBeenCalledOnce()
 })

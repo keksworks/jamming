@@ -54,7 +54,8 @@
   },
   "song": {
     "progressions": "Progressions",
-    "song": "Song",
+    "songs": "Songs",
+    "manual": "Manual entry",
     "title": "Title",
     "artist": "Artist",
     "key": "Key",

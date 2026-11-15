@@ -14,7 +14,7 @@
   export let actionLabel: string
   export let onpick: (song: Song) => void
 
-  const tabs = ['progressions', 'song'] as const
+  const tabs = ['progressions', 'songs', 'manual'] as const
   export let tab: typeof tabs[number] = 'progressions'
   let root = 'C'
   export let song = {} as Song
@@ -82,7 +82,7 @@
 
 <div class="flex gap-2 mb-4">
   {#each tabs as name}
-    <Button label={t.song[name]} class={tab == name ? 'default' : 'secondary'} onclick={() => tab = name}/>
+    <Button label={t.song[name]} class="{tab == name ? 'default' : 'secondary'} flex-auto min-w-0 px-2 sm:flex-none sm:min-w-28 sm:px-4" onclick={() => tab = name}/>
   {/each}
 </div>
 
@@ -108,7 +108,7 @@
       {/each}
     </ul>
   </div>
-{:else}
+{:else if tab == 'songs'}
   <div class="spaced">
     <Form submit={search}>
       <FormField label={t.song.searchSongs} bind:value={query} type="search">
@@ -116,7 +116,7 @@
       </FormField>
     </Form>
     {#if results}
-      <ul class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
+      <ul class="divide-y divide-gray-200">
         {#each results as found (found.id)}
           <li><button type="button" class="w-full flex items-center gap-2 py-2 hover:bg-gray-50" onclick={() => use(found)}>
             <b class="truncate">{found.title}</b> <span class="text-gray-500 flex-1 truncate text-left">{found.artist ?? ''}</span>
@@ -128,7 +128,9 @@
         {/each}
       </ul>
     {/if}
-
+  </div>
+{:else}
+  <div class="spaced">
     <Form submit={confirm}>
       <div class="flex flex-wrap gap-3">
         <FormField label={t.song.title} bind:value={song.title} class="flex-1 min-w-40"/>
