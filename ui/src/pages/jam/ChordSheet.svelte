@@ -31,12 +31,12 @@
 
 <svelte:window onclick={closeOutside} onkeyup={(e: KeyboardEvent) => e.key == 'Escape' && (popover = undefined)}/>
 
-<div bind:this={sheet} class="font-mono text-sm sm:text-base leading-tight">
+<div bind:this={sheet} class="font-mono text-sm sm:text-base leading-tight overflow-x-auto">
   {#each lines as line}
     <div class="flex flex-wrap items-end min-h-5">
       {#each line as part}
         {#if part.label}<span class="font-sans font-semibold text-gray-500 mt-3 mr-2">{part.label}</span>{/if}
-        <span class="inline-flex flex-col whitespace-pre-wrap">
+        <span class="inline-flex flex-col">
           {#if part.chord}
             <span class="group relative self-start">
               <button type="button" class="chord font-bold text-left pr-2 rounded-sm cursor-pointer scroll-mt-40 {part.index == current ? 'current bg-primary-600 text-white px-1' : 'text-primary-700 dark:text-primary-300'}"
