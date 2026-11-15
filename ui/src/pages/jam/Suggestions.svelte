@@ -43,7 +43,7 @@
   </ul>
 
   <div class="flex flex-wrap items-center gap-2">
-    <Button icon="bulb" label={t.suggestions.suggestSong} class="outlined" onclick={() => showPicker = true}/>
+    <Button icon="music" label={t.suggestions.suggestSong} class="outlined" onclick={() => showPicker = true}/>
     {#if jam.song}
       <span class="flex items-center gap-2 ml-auto">
         <SelectField bind:value={key} options={keyOptions(minor)}/>

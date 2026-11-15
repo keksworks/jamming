@@ -54,6 +54,7 @@
   </div>
 
   <div class="flex items-center gap-2 sm:ml-auto">
+    <slot/>
     <Button icon="metronome" title={t.jam.metronome} class="{metronome ? 'default' : 'outlined'} text-lg" aria-pressed={metronome} onclick={toggleMetronome}/>
     <SelectField bind:value={chordSound} options={t.jam.chordSound.options} title={t.jam.chordSound.title} onchange={() => chordSound != 'none' && unlockAudio()}/>
   </div>

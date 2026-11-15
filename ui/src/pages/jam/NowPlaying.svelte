@@ -55,13 +55,16 @@
         </h4>
         {#if jam.song.artist}<p class="text-sm text-gray-600">{jam.song.artist}</p>{/if}
       </div>
-      {#if key}
-        <SelectField label={t.jam.key} bind:value={key} options={keyOptions(key.endsWith('m'))} onchange={() => changeKey(key)}/>
-      {/if}
-      <Button label={t.jam.changeSong} icon="music" class="outlined" onclick={() => showPicker = true}/>
+      <Button icon="edit" title={t.jam.changeSong} class="outlined max-sm:min-w-[2.375rem] max-sm:px-2" onclick={() => showPicker = true}>
+        <span class="max-sm:hidden">{t.jam.changeSong}</span>
+      </Button>
     </div>
 
-    <PlaybackControls playback={jam.playback} {beat} total={pos?.total} chord={pos && !countIn ? sheet.chords[pos.index] : undefined}/>
+    <PlaybackControls playback={jam.playback} {beat} total={pos?.total} chord={pos && !countIn ? sheet.chords[pos.index] : undefined}>
+      {#if key}
+        <SelectField bind:value={key} options={keyOptions(key.endsWith('m'))} title={t.jam.key} onchange={() => changeKey(key)}/>
+      {/if}
+    </PlaybackControls>
 
     {#if pos}
       <div class="sticky top-14 z-20 bg-surface py-2 flex items-baseline gap-3 sm:gap-6">
