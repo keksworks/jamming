@@ -3,7 +3,7 @@ services:
   app:
     environment:
       - ENV=prod
-      - XFORWARDED_IP_FROM_END
+      - XFORWARDED_IP_FROM_END=2
       - OWN_HOST
     networks:
       - proxy
