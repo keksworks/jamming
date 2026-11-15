@@ -8,7 +8,7 @@ const lyrics = {...song, id: 'l1', title: 'Lyrics', sheet: 'Just words', key: un
 afterEach(() => vi.restoreAllMocks())
 
 async function searchAndUse(title: string) {
-  vi.spyOn(api, 'get').mockResolvedValue([song, lyrics])
+  vi.spyOn(api, 'get').mockResolvedValue([song, {...lyrics}])
   const onpick = vi.fn()
   const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick, tab: 'song'})
   await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
@@ -17,7 +17,6 @@ async function searchAndUse(title: string) {
   await findByText('lyrics only')
   expect(container.querySelector('.badge')!.textContent).to.eq('chords')
   await fireEvent.click(getByText(title))
-  await fireEvent.submit(container.querySelectorAll('form')[1])
   return onpick
 }
 
@@ -70,14 +69,15 @@ it('loads chords from Ultimate Guitar when picked, converted to inline chords', 
   const found = {...song, id: 'ug1', title: 'From UG', sheet: '', url: 'https://tabs.ultimate-guitar.com/tab/1'}
   const get = vi.spyOn(api, 'get').mockImplementation(async (path: string) =>
     path.startsWith('songs?') ? [found] : {...found, sheet: 'C    G\nWhen I find'})
-  const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick: vi.fn(), tab: 'song'})
+  vi.spyOn(api, 'post').mockImplementation(async (_, song) => song)
+  const onpick = vi.fn()
+  const {container, getByText, findByText} = render(SongPicker, {actionLabel: 'Pick', onpick, tab: 'song'})
   await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
   await fireEvent.submit(container.querySelector('form')!)
   expect((await findByText('ultimate-guitar.com')).textContent).to.eq('ultimate-guitar.com')
   await fireEvent.click(getByText('From UG'))
   expect(get).toHaveBeenLastCalledWith('songs/ultimate-guitar?url=' + encodeURIComponent(found.url))
-  await vi.waitFor(() => expect(container.querySelector('textarea')!.value).to.eq('[C]When [G]I find'))
-  expect(container.querySelector('a[href="https://tabs.ultimate-guitar.com/tab/1"]')).to.exist
+  await vi.waitFor(() => expect(onpick).toHaveBeenCalledWith({...found, sheet: '[C]When [G]I find'}))
 })
 
 it('suggests own songs after typing stops, without searching other sources', async () => {

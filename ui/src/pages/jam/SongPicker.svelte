@@ -61,9 +61,12 @@
   /** Chords found on external sites are loaded only when picked */
   async function use(found: Song) {
     results = undefined
-    if (found.sheet || !found.url) return song = found
-    const loaded = await api.get<Song>('songs/ultimate-guitar?url=' + encodeURIComponent(found.url))
-    song = {...loaded, sheet: toChordPro(loaded.sheet)}
+    if (found.sheet || !found.url) song = found
+    else {
+      const loaded = await api.get<Song>('songs/ultimate-guitar?url=' + encodeURIComponent(found.url))
+      song = {...loaded, sheet: toChordPro(loaded.sheet)}
+    }
+    await confirm()
   }
 
   function source(url: string) {
