@@ -41,7 +41,7 @@
 
 <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
   <div class="flex items-center gap-3">
-    <Button icon={playback.startedAt ? 'player-stop' : 'player-play'} label={playback.startedAt ? t.jam.stop : t.jam.play} size="md:lg" onclick={togglePlay}/>
+    <Button icon={playback.startedAt ? 'player-stop' : 'player-play'} label={playback.startedAt ? t.jam.stop : t.jam.play} class="default md:lg" onclick={togglePlay}/>
 
     <span class="flex items-center gap-1">
       <Button icon="minus" class="outlined" onclick={() => tempo(-5)}/>
