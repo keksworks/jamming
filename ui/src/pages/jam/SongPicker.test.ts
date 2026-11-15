@@ -45,6 +45,7 @@ it('picks own progression', async () => {
 it('links to chord sites for the searched song', async () => {
   const {container, getByText} = render(SongPicker, {actionLabel: 'Pick', onpick: vi.fn()})
   await fireEvent.click(getByText('Songs'))
+  expect(document.activeElement).to.eq(container.querySelector('input[type=search]'))
   await fireEvent.input(container.querySelector('input[type=search]')!, {target: {value: 'let it be'}})
   await fireEvent.click(getByText('Manual entry'))
   const links = [...container.querySelectorAll('a')].map(a => a.href)

@@ -111,7 +111,7 @@
 {:else if tab == 'songs'}
   <div class="spaced">
     <Form submit={search}>
-      <FormField label={t.song.searchSongs} bind:value={query} type="search">
+      <FormField label={t.song.searchSongs} bind:value={query} type="search" autofocus>
         <svelte:fragment slot="after"><Button type="submit" icon="search" title={t.song.searchSongs} class="outlined ml-2"/></svelte:fragment>
       </FormField>
     </Form>
