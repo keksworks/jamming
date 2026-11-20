@@ -4,7 +4,7 @@ services:
       context: .
       extra_hosts:
         - "host.docker.internal:host-gateway"
-    image: ${REGISTRY:-ghcr.io}/${IMAGE_NAME:-keksworks/jamming}
+    image: ${REGISTRY:-ghcr.io}/${IMAGE_NAME:-keksworks/jamming}:${VERSION:-latest}
     restart: unless-stopped
     depends_on:
       - db

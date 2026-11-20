@@ -9,6 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  VERSION: ${{ github.sha }}
 
 jobs:
   test:
@@ -60,9 +61,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha
+            type=raw,value=${{ env.VERSION }}
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
 
       - name: Build and push Docker image
@@ -75,7 +74,7 @@ jobs:
           network: host
           build-args: |
             AOT_DB_HOST=localhost
-            VERSION=${{ github.sha }}
+            VERSION=${{ env.VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -84,16 +83,13 @@ jobs:
     needs: build-and-push
     if: github.event_name == 'push'
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
       - name: Deploy to server
         run: |
           if [ -z "$DEPLOY_SSH_KEY" ]; then exit 0; fi
           echo "$DEPLOY_SSH_KEY" > /tmp/deploy_key && chmod 600 /tmp/deploy_key
-          OPTS="-i /tmp/deploy_key -o StrictHostKeyChecking=no"
-          scp $OPTS deploy.sh compose*.yml .env "$DEPLOY_SSH_HOST":jamming
-          ssh $OPTS "$DEPLOY_SSH_HOST" "cd jamming && REGISTRY=$REGISTRY IMAGE_NAME=$IMAGE_NAME ./deploy.sh"
+          ssh -i /tmp/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no \
+            "$DEPLOY_SSH_HOST" "$REPO $VERSION"
         env:
           DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          REPO: ${{ github.event.repository.name }}
